@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
 import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_one.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
         primarySwatch: Colors.blue,
       ),
-      home: ScreenOne(),
+      home: SignInScreen(),
     );
   }
 }

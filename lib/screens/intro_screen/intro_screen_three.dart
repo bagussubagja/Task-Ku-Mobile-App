@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_ku_mobile_app/routes/app_routes.dart';
-import 'package:task_ku_mobile_app/screens/auth_screen/login_screen.dart';
+import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
 class ScreenThree extends StatelessWidget {
@@ -92,7 +92,7 @@ class ScreenThree extends StatelessWidget {
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return LoginScreen();
+                                return SignInScreen();
                               }));
                             },
                             child: Text(
