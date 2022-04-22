@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_ku_mobile_app/routes/app_routes.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
 import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_one.dart';
 
@@ -13,13 +14,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/login',
+      routes: AppRoute.routes,
       debugShowCheckedModeBanner: false,
       title: 'Task Ku Mobile App',
+      darkTheme: ThemeData.dark(),
       theme: ThemeData(
         fontFamily: 'Poppins',
         primarySwatch: Colors.blue,
       ),
-      home: SignInScreen(),
     );
   }
 }

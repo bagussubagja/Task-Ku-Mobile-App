@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:task_ku_mobile_app/routes/app_routes.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/register_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
@@ -73,7 +74,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            Navigator.of(context).pushNamedAndRemoveUntil(AppRoute.HomeRoute, (route) => false);
+                          },
                           child: Text(
                             'Sign In',
                             style: regularStyle,
