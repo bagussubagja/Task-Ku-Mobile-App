@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DateTime _selectedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   dateTextStyle: TextStyle(fontSize: 18, color: greyColor),
                   monthTextStyle: TextStyle(fontSize: 12, color: greyColor),
                   dayTextStyle: TextStyle(fontSize: 12, color: greyColor),
+                  onDateChange: (date) {
+                    _selectedDate = date;
+                  },
                 ),
               ),
               SizedBox(
