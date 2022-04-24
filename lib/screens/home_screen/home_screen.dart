@@ -1,4 +1,5 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
@@ -13,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final user = FirebaseAuth.instance.currentUser;
   DateTime _selectedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
@@ -47,18 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('Howdy,',
                           style: regularBlackStyle.copyWith(fontSize: 18)),
                       Text(
-                        'Bagus Subagja.',
+                        user?.displayName ?? '',
                         style: titleBlackStyle.copyWith(fontSize: 22),
                       )
                     ],
                   ),
-                  ClipOval(
-                    child: Image.asset(
-                      'assets/images/profile_picture.png',
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(user?.photoURL ?? ''),
                   )
                 ],
               ),

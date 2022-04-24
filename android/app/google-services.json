@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "970647088899",
+    "project_id": "task-ku-mobile-app",
+    "storage_bucket": "task-ku-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970647088899:android:32c502ab17830f55684336",
+        "android_client_info": {
+          "package_name": "com.example.task_ku_mobile_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970647088899-qd5652arcj05v4jur13rfcd7scr93jmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9ssJBtVtBEI39PuLeQrmQpAxjW4eAqxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970647088899-qd5652arcj05v4jur13rfcd7scr93jmp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

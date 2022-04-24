@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/routes/app_routes.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/register_screen.dart';
+import 'package:task_ku_mobile_app/shared/page_state.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
 
@@ -75,7 +78,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () async {
-                            Navigator.of(context).pushNamedAndRemoveUntil(AppRoute.HomeRoute, (route) => false);
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                AppRoute.HomeRoute, (route) => false);
                           },
                           child: Text(
                             'Sign In',
@@ -129,7 +133,22 @@ class _SignInScreenState extends State<SignInScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            // final provider = Provider.of<GoogleSignInProvider>(
+                            //     context,
+                            //     listen: false);
+                            // provider.googleLogin();
+                            // Navigator.of(context).pushNamedAndRemoveUntil(
+                            //     AppRoute.HomeRoute, (route) => false);
+                            final provider = Provider.of<GoogleSignInProvider>(
+                                context,
+                                listen: false);
+                            provider.googleLogin();
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return PageState();
+                            }));
+                          },
                           child: Container(
                             height: 50,
                             width: 50,
