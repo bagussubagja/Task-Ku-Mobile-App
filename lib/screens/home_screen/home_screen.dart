@@ -49,14 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('Howdy,',
                           style: regularBlackStyle.copyWith(fontSize: 18)),
                       Text(
-                        user?.displayName ?? '',
+                        user?.displayName ?? 'Guest',
                         style: titleBlackStyle.copyWith(fontSize: 22),
                       )
                     ],
                   ),
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(user?.photoURL ?? ''),
+                    backgroundImage: NetworkImage(user?.photoURL ??
+                        'https://img3.pngdownload.id/dy/1b9ce737ab4309d77f8ae34c5c4871b4/L0KzQYm3VsI3N6Z8i5H0aYP2gLBuTfF3aaVmip9Ac3X1PbT2jgB2fJZ3Rdtsb372PcT2hwR4aaNqRdZudnXvf8Hskr02amQ3T9VsOXPmQYbtV745P2M8SqkDMEG4Q4G3U8U1OGI9S6g3cH7q/kisspng-avatar-user-computer-icons-software-developer-5b327cc9cc15f7.872727801530035401836.png'),
                   )
                 ],
               ),
