@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
 
@@ -13,7 +15,8 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
-  String? _endTime = "10:00 AM";
+  String _endTime = "10:00 AM";
+  bool isDone = false;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   @override
@@ -53,7 +56,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               InputField(
                 titleText: 'Task Date',
                 hintText: DateFormat.yMd().format(_selectedDate),
-                controller: titleController,
                 widget: IconButton(
                     onPressed: () {
                       _getDateFromUser();
@@ -100,7 +102,32 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 width: 290,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final title = titleController.text;
+                      final desc = descController.text;
+                      final selectedDate = _selectedDate;
+                      final startTime = _startTime;
+                      final endTime = _endTime;
+
+                      print(titleController.text);
+                      print(descController.text);
+                      print(_selectedDate);
+                      print(_startTime);
+                      print(_endTime);
+
+                      createTodo(
+                        title: title,
+                        desc: desc,
+                        taskDate: selectedDate,
+                        startTime: startTime,
+                        endTime: endTime,
+                      );
+                      titleController.clear();
+                      descController.clear();
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Task Successfully added!')));
+                    },
                     child: Text(
                       'Add Task',
                       style: regularStyle,
@@ -111,6 +138,29 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       )),
     );
+  }
+
+  Future createTodo({
+    required String title,
+    required String desc,
+    required DateTime taskDate,
+    required String startTime,
+    required String endTime,
+  }) async {
+    final docTodo = FirebaseFirestore.instance.collection('todo-list').doc();
+
+    final task = TaskModel(
+      id: docTodo.id,
+      title: title,
+      desc: desc,
+      taskDate: taskDate,
+      startTask: startTime,
+      endTask: endTime,
+    );
+
+    final json = task.toJson();
+
+    await docTodo.set(json);
   }
 
   _getTimeFromUser({required bool isStartTime}) async {

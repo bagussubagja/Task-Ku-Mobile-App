@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/nav_drawer.dart';
@@ -95,11 +97,113 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: regularBlackStyle,
                   )
                 ],
-              )
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              StreamBuilder<List<TaskModel>>(
+                  stream: readTasks(),
+                  builder: (context, snapshot) {
+                    print(snapshot);
+                    try {
+                      if (snapshot.hasError) {
+                        return Text('Something error ${snapshot.error}!');
+                      } else if (snapshot.hasData) {
+                        final tasks = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) =>
+                              buildTask(tasks[index], index),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Text('No Data');
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    } catch (e) {
+                      return SizedBox();
+                    }
+                  })
             ],
           ),
         ),
       )),
     );
   }
+}
+
+Stream<List<TaskModel>> readTasks() {
+  return FirebaseFirestore.instance
+      .collection('todo-list')
+      .snapshots()
+      .map((snapshot) {
+    return snapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
+  });
+}
+
+Widget buildTask(TaskModel taskModel, int index) {
+  bool isChecked = false;
+
+  return Container(
+    margin: EdgeInsets.only(top: 15),
+    padding: EdgeInsets.fromLTRB(10, 12, 10, 12),
+    decoration: BoxDecoration(
+        color: bluePrimaryColor, borderRadius: BorderRadius.circular(10)),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Title :',
+              style: titleStyle.copyWith(fontSize: 16),
+            ),
+            Text(
+              taskModel.title,
+              style: regularStyle,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Description : ',
+              style: titleStyle.copyWith(fontSize: 16),
+            ),
+            Container(
+              child: Text(
+                taskModel.desc,
+                style: regularStyle.copyWith(fontSize: 10),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Start Time : ',
+              style: titleStyle.copyWith(fontSize: 16),
+            ),
+            Text(
+              taskModel.startTask,
+              style: regularStyle,
+            ),
+          ],
+        ),
+        IconButton(
+            onPressed: () async {
+              var collection =
+                  FirebaseFirestore.instance.collection('todo-list');
+              var snapshots = await collection.get();
+              var doc = snapshots.docs;
+              collection.doc(snapshots.docs[index].id).delete();
+            },
+            icon: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ))
+      ],
+    ),
+  );
 }

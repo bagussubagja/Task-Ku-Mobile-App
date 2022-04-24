@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 
@@ -27,13 +27,24 @@ class NavBar extends StatelessWidget {
             title: Text('Help Center'),
             onTap: () => null,
           ),
-          Divider(),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () => null,
           ),
           Divider(),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('Delete All Task'),
+            onTap: () async {
+              var collection =
+                  FirebaseFirestore.instance.collection('todo-list');
+              var snapshots = await collection.get();
+              for (var doc in snapshots.docs) {
+                await doc.reference.delete();
+              }
+            },
+          ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Sign Out'),
