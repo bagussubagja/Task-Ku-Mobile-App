@@ -1,52 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        // Remove padding
-        padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text('Oflutter.com'),
-            accountEmail: Text('example@gmail.com'),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.network(
-                  'https://oflutter.com/wp-content/uploads/2021/02/girl-profile.png',
-                  fit: BoxFit.cover,
-                  width: 90,
-                  height: 90,
-                ),
-              ),
-            ),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(
-                      'https://oflutter.com/wp-content/uploads/2021/02/profile-bg3.jpg')),
-            ),
+          Container(
+            margin: const EdgeInsets.only(top: 15, bottom: 15),
+            height: 200,
+            width: 100,
+            child: Image.asset('assets/images/Logo App_Full Name.png'),
           ),
           ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text('Favorites'),
-            onTap: () => null,
-          ),
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Friends'),
-            onTap: () => null,
-          ),
-          ListTile(
-            leading: Icon(Icons.share),
-            title: Text('Share'),
+            leading: Icon(Icons.info_outline_rounded),
+            title: Text('About'),
             onTap: () => null,
           ),
           ListTile(
             leading: Icon(Icons.notifications),
-            title: Text('Request'),
+            title: Text('Help Center'),
+            onTap: () => null,
           ),
           Divider(),
           ListTile(
@@ -54,15 +29,10 @@ class NavBar extends StatelessWidget {
             title: Text('Settings'),
             onTap: () => null,
           ),
-          ListTile(
-            leading: Icon(Icons.description),
-            title: Text('Policies'),
-            onTap: () => null,
-          ),
           Divider(),
           ListTile(
-            title: Text('Exit'),
             leading: Icon(Icons.exit_to_app),
+            title: Text('Sign Out'),
             onTap: () => null,
           ),
         ],

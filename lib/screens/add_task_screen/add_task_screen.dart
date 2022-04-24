@@ -13,7 +13,7 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
-  String? _endTime;
+  String? _endTime = "10:00 AM";
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   @override
@@ -115,7 +115,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime?.format(context) ?? '';
+    String _formatedTime = pickedTime?.format(context) ?? '10:00 AM';
     if (pickedTime == null) {
       print('Time is NULL');
     } else if (isStartTime == true) {
