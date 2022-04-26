@@ -17,6 +17,7 @@ class NavBar extends StatelessWidget {
             width: 100,
             child: Image.asset('assets/images/Logo App_Full Name.png'),
           ),
+          Divider(),
           ListTile(
             leading: Icon(Icons.info_outline_rounded),
             title: Text('About'),
@@ -43,6 +44,9 @@ class NavBar extends StatelessWidget {
               for (var doc in snapshots.docs) {
                 await doc.reference.delete();
               }
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Semua data telah dihapus!')));
+              Navigator.of(context).pop();
             },
           ),
           ListTile(

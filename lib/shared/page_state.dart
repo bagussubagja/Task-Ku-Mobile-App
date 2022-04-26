@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
-import 'package:task_ku_mobile_app/screens/home_screen/home_screen.dart';
+import 'package:task_ku_mobile_app/screens/body_screen/body_screen.dart';
 
 class PageState extends StatelessWidget {
   const PageState({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class PageState extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData) {
-              return HomeScreen();
+              return BodyScreen();
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('Something went wrong!'),

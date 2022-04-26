@@ -4,9 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
-import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
-import 'package:task_ku_mobile_app/widgets/nav_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,23 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _selectedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return AddTaskScreen();
-          }));
-        },
-        child: Icon(Icons.add),
-      ),
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black),
-      body: SafeArea(
-          child: SingleChildScrollView(
+    return SafeArea(
+      child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           child: Column(
@@ -113,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return ListView.builder(
                           itemCount: tasks.length,
                           itemBuilder: (context, index) =>
-                              buildTask(tasks[index], index),
+                              buildTask(tasks[index], index, context),
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                         );
@@ -129,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      )),
+      ),
     );
   }
 }
@@ -143,7 +126,7 @@ Stream<List<TaskModel>> readTasks() {
   });
 }
 
-Widget buildTask(TaskModel taskModel, int index) {
+Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
   bool isChecked = false;
 
   return Container(
@@ -174,8 +157,10 @@ Widget buildTask(TaskModel taskModel, int index) {
             ),
             Container(
               child: Text(
-                taskModel.desc,
-                style: regularStyle.copyWith(fontSize: 10),
+                taskModel.desc.length > 35
+                    ? taskModel.desc.substring(0, 35) + '...'
+                    : taskModel.desc,
+                style: regularStyle.copyWith(fontSize: 15),
               ),
             ),
             SizedBox(
@@ -193,11 +178,33 @@ Widget buildTask(TaskModel taskModel, int index) {
         ),
         IconButton(
             onPressed: () async {
-              var collection =
-                  FirebaseFirestore.instance.collection('todo-list');
-              var snapshots = await collection.get();
-              var doc = snapshots.docs;
-              collection.doc(snapshots.docs[index].id).delete();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Ini Judul'),
+                      content: Text('beneran mau dihapus?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            var collection = FirebaseFirestore.instance
+                                .collection('todo-list');
+                            var snapshots = await collection.get();
+                            var doc = snapshots.docs;
+                            collection.doc(snapshots.docs[index].id).delete();
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Data telah dihapus!')));
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  });
             },
             icon: Icon(
               Icons.delete,
