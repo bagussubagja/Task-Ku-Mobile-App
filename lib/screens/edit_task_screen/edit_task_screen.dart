@@ -5,27 +5,44 @@ import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
 
-class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+class EditTaskScreen extends StatefulWidget {
+  TaskModel taskModels;
+  int index;
+
+  EditTaskScreen({Key? key, required this.taskModels, required this.index})
+      : super(key: key);
 
   @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
+  State<EditTaskScreen> createState() => _EditTaskScreenState();
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _EditTaskScreenState extends State<EditTaskScreen> {
   DateTime _selectedDate = DateTime.now();
+
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _endTime = "10:00 AM";
+
   bool isDone = false;
+
   final TextEditingController titleController = TextEditingController();
+
   final TextEditingController descController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _startTime = widget.taskModels.startTask;
+    _endTime = widget.taskModels.endTask;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
           title: Text(
-            'Add Task',
+            'Edit Task',
             style: titleBlackStyle.copyWith(fontSize: 22),
           ),
           elevation: 0,
@@ -39,7 +56,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             children: [
               InputField(
                 titleText: 'Title',
-                hintText: 'Enter your title...',
+                hintText: widget.taskModels.title,
                 controller: titleController,
               ),
               SizedBox(
@@ -47,7 +64,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               InputField(
                 titleText: 'Description',
-                hintText: 'Enter your description...',
+                hintText: widget.taskModels.desc,
                 controller: descController,
               ),
               SizedBox(
@@ -55,7 +72,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               InputField(
                 titleText: 'Task Date',
-                hintText: DateFormat.yMd().format(_selectedDate),
+                hintText:
+                    widget.taskModels.taskDate.toString().substring(0, 10),
                 widget: IconButton(
                     onPressed: () {
                       _getDateFromUser();
@@ -108,28 +126,27 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       final selectedDate = _selectedDate;
                       final startTime = _startTime;
                       final endTime = _endTime;
+                      print(startTime);
+                      try {
+                        editTodo(
+                            title: title,
+                            desc: desc,
+                            taskDate: selectedDate,
+                            startTime: _startTime,
+                            endTime: _endTime);
+                        Navigator.of(context).pop();
+                      } catch (e) {
+                        print(e.toString());
+                      }
 
-                      print(titleController.text);
-                      print(descController.text);
-                      print(_selectedDate);
-                      print(_startTime);
-                      print(_endTime);
-
-                      createTodo(
-                        title: title,
-                        desc: desc,
-                        taskDate: selectedDate,
-                        startTime: startTime,
-                        endTime: endTime,
-                      );
                       titleController.clear();
                       descController.clear();
-                      Navigator.of(context).pop();
+
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Task Successfully added!')));
+                          SnackBar(content: Text('Task Successfully edited!')));
                     },
                     child: Text(
-                      'Add Task',
+                      'Edit Task',
                       style: regularStyle,
                     )),
               )
@@ -140,47 +157,48 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  Future createTodo({
+  Future editTodo({
     required String title,
     required String desc,
     required DateTime taskDate,
     required String startTime,
     required String endTime,
   }) async {
-    final docTodo = FirebaseFirestore.instance.collection('todo-list').doc();
-
-    final task = TaskModel(
-      id: docTodo.id,
-      title: title,
-      desc: desc,
-      taskDate: taskDate,
-      startTask: startTime,
-      endTask: endTime,
-    );
-
-    final json = task.toJson();
-
-    await docTodo.set(json);
+    var collection = FirebaseFirestore.instance.collection('todo-list');
+    var snapshots = await collection.get();
+    var doc = snapshots.docs;
+    final editedTask = TaskModel(
+        id: snapshots.docs[widget.index].id,
+        title: title,
+        desc: desc,
+        taskDate: taskDate,
+        startTask: startTime,
+        endTask: endTime);
+    final json = editedTask.toJson();
+    print(json);
+    collection.doc(snapshots.docs[widget.index].id).update(json);
   }
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime?.format(context) ?? '10:00 AM';
+    String _formatedTime = pickedTime?.format(context) ?? _endTime;
     if (pickedTime == null) {
       print('Time is NULL');
     } else if (isStartTime == true) {
       setState(() {
         _startTime = _formatedTime;
+        print(_startTime);
       });
     } else if (isStartTime == false) {
       setState(() {
         _endTime = _formatedTime;
+        print(_endTime);
       });
     }
   }
 
   Future<TimeOfDay?> _showTimePicker() async {
-    return await showTimePicker(
+    return showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
       context: context,
       initialTime: TimeOfDay(

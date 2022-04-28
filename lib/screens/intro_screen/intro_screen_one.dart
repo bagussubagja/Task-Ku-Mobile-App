@@ -20,9 +20,11 @@ class ScreenOne extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      colors: [Colors.black, Colors.black26])),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  colors: [Colors.black, Colors.black26],
+                ),
+              ),
             ),
             Align(
               alignment: Alignment.topRight,
