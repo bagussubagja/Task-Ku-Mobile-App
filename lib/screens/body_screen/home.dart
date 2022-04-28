@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
+import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
+import 'package:task_ku_mobile_app/screens/edit_task_screen/edit_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -166,50 +168,95 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
             SizedBox(
               height: 10,
             ),
-            Text(
-              'Start Time : ',
-              style: titleStyle.copyWith(fontSize: 16),
-            ),
-            Text(
-              taskModel.startTask,
-              style: regularStyle,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Start Time : ',
+                      style: titleStyle.copyWith(fontSize: 16),
+                    ),
+                    Text(
+                      taskModel.startTask,
+                      style: regularStyle,
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnd Time : ',
+                      style: titleStyle.copyWith(fontSize: 16),
+                    ),
+                    Text(
+                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + taskModel.endTask,
+                      style: regularStyle,
+                    ),
+                  ],
+                )
+              ],
             ),
           ],
         ),
-        IconButton(
-            onPressed: () async {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Ini Judul'),
-                      content: Text('beneran mau dihapus?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            var collection = FirebaseFirestore.instance
-                                .collection('todo-list');
-                            var snapshots = await collection.get();
-                            var doc = snapshots.docs;
-                            collection.doc(snapshots.docs[index].id).delete();
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Data telah dihapus!')));
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
+        Column(
+          children: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    // return EditTaskScreen(taskModel: taskModel[index]);
+                    return EditTaskScreen(
+                      taskModels: taskModel,
+                      index: index,
                     );
-                  });
-            },
-            icon: Icon(
-              Icons.delete,
-              color: Colors.white,
-            ))
+                  }));
+                },
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                )),
+            IconButton(
+                onPressed: () async {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Ini Judul'),
+                          content: Text('beneran mau dihapus?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                var collection = FirebaseFirestore.instance
+                                    .collection('todo-list');
+                                var snapshots = await collection.get();
+                                var doc = snapshots.docs;
+                                collection
+                                    .doc(snapshots.docs[index].id)
+                                    .delete();
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Data telah dihapus!')));
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      });
+                },
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ))
+          ],
+        ),
       ],
     ),
   );
