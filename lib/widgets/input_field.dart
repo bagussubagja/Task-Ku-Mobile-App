@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
 class InputField extends StatelessWidget {
-  String? titleText;
+  String titleText = "";
   String? hintText;
   TextEditingController? controller;
   Widget? widget;
@@ -11,7 +11,7 @@ class InputField extends StatelessWidget {
   int? maxLine;
   InputField({
     Key? key,
-    this.titleText,
+    required this.titleText,
     this.hintText,
     this.controller,
     this.widget,
@@ -25,10 +25,12 @@ class InputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          titleText ?? '',
-          style: TextStyle(fontSize: 14),
-        ),
+        titleText.isEmpty
+            ? SizedBox.shrink()
+            : Text(
+                titleText,
+                style: TextStyle(fontSize: 14),
+              ),
         SizedBox(
           height: 5,
         ),
@@ -56,7 +58,7 @@ class InputField extends StatelessWidget {
                 ),
               ),
               widget == null
-                  ? Container()
+                  ? SizedBox.shrink()
                   : Container(
                       child: widget,
                     )

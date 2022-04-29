@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   dayTextStyle: TextStyle(fontSize: 12, color: greyColor),
                   onDateChange: (date) {
                     _selectedDate = date;
+                    print(_selectedDate);
                   },
                 ),
               ),
@@ -87,30 +88,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 15,
               ),
               StreamBuilder<List<TaskModel>>(
-                  stream: readTasks(),
-                  builder: (context, snapshot) {
-                    print(snapshot);
-                    try {
-                      if (snapshot.hasError) {
-                        return Text('Something error ${snapshot.error}!');
-                      } else if (snapshot.hasData) {
-                        final tasks = snapshot.data!;
-                        return ListView.builder(
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) =>
-                              buildTask(tasks[index], index, context),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                        );
-                      } else if (!snapshot.hasData) {
-                        return Text('No Data');
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    } catch (e) {
-                      return SizedBox();
+                stream: readTasks(),
+                builder: (context, snapshot) {
+                  print(snapshot);
+                  try {
+                    if (snapshot.hasError) {
+                      return Text('Something error ${snapshot.error}!');
+                    } else if (snapshot.hasData) {
+                      final tasks = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: tasks.length,
+                        itemBuilder: (context, index) =>
+                            buildTask(tasks[index], index, context),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                      );
+                    } else if (!snapshot.hasData) {
+                      return Text('No Data');
+                    } else {
+                      return CircularProgressIndicator();
                     }
-                  })
+                  } catch (e) {
+                    return SizedBox();
+                  }
+                },
+              )
             ],
           ),
         ),

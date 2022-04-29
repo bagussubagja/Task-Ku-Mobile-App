@@ -50,6 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 25,
                     ),
                     InputField(
+                      titleText: '',
                       controller: emailController,
                       hintText: "Enter your email...",
                     ),
@@ -57,6 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 10,
                     ),
                     InputField(
+                      titleText: '',
                       controller: passwordController,
                       hintText: "Enter your password...",
                     ),
