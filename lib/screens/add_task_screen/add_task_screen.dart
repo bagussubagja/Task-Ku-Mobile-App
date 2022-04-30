@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
@@ -15,7 +16,9 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
-  String _endTime = "10:00 AM";
+  String _endTime = DateFormat("hh:mm a")
+      .format(DateTime.now().add(Duration(hours: 2)))
+      .toString();
   bool isDone = false;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
@@ -147,7 +150,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     required String startTime,
     required String endTime,
   }) async {
-    final docTodo = FirebaseFirestore.instance.collection('todo-list').doc();
+    final user = FirebaseAuth.instance.currentUser;
+    final docTodo =
+        FirebaseFirestore.instance.collection('todo-list ${user?.uid}').doc();
 
     final task = TaskModel(
       id: docTodo.id,

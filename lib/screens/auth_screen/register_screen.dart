@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
@@ -38,18 +39,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textAlign: TextAlign.center,
                       style: regularStyle.copyWith(color: greyColor),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Container(
-                      height: 170,
-                      width: 230,
-                      child: SvgPicture.asset('assets/svg/register.svg'),
-                    ),
-                    SizedBox(
-                      height: 25,
+                      height: 275,
+                      width: double.infinity,
+                      child: Lottie.network(
+                          'https://assets1.lottiefiles.com/packages/lf20_jcikwtux.json'),
                     ),
                     InputField(
+                      titleText: '',
                       controller: emailController,
                       hintText: "Enter your email...",
                     ),
@@ -57,6 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 10,
                     ),
                     InputField(
+                      titleText: '',
                       controller: passwordController,
                       hintText: "Enter your password...",
                     ),

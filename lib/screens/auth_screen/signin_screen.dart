@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/routes/app_routes.dart';
@@ -24,7 +25,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
             child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+          padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
           child: Column(
             children: [
               Center(
@@ -42,18 +43,14 @@ class _SignInScreenState extends State<SignInScreen> {
                       textAlign: TextAlign.center,
                       style: regularStyle.copyWith(color: greyColor),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Container(
-                      height: 170,
-                      width: 230,
-                      child: SvgPicture.asset('assets/svg/login.svg'),
-                    ),
-                    SizedBox(
-                      height: 25,
+                      height: 275,
+                      width: double.infinity,
+                      child: Lottie.network(
+                          'https://assets3.lottiefiles.com/private_files/lf30_fw6h59eu.json'),
                     ),
                     InputField(
+                      titleText: '',
                       controller: emailController,
                       hintText: "Enter your email...",
                     ),
@@ -61,6 +58,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 10,
                     ),
                     InputField(
+                      titleText: '',
                       controller: passwordController,
                       hintText: "Enter your password...",
                     ),
