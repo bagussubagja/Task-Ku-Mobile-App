@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
@@ -164,7 +165,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     required String startTime,
     required String endTime,
   }) async {
-    var collection = FirebaseFirestore.instance.collection('todo-list');
+    final user = FirebaseAuth.instance.currentUser;
+    var collection =
+        FirebaseFirestore.instance.collection('todo-list ${user?.uid}');
     var snapshots = await collection.get();
     var doc = snapshots.docs;
     final editedTask = TaskModel(

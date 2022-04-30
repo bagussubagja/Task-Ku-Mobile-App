@@ -122,8 +122,9 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 Stream<List<TaskModel>> readTasks() {
+  final user = FirebaseAuth.instance.currentUser;
   return FirebaseFirestore.instance
-      .collection('todo-list')
+      .collection('todo-list ${user?.uid}')
       .snapshots()
       .map((snapshot) {
     return snapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
@@ -235,8 +236,9 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                             ),
                             TextButton(
                               onPressed: () async {
+                                final user = FirebaseAuth.instance.currentUser;
                                 var collection = FirebaseFirestore.instance
-                                    .collection('todo-list');
+                                    .collection('todo-list ${user?.uid}');
                                 var snapshots = await collection.get();
                                 var doc = snapshots.docs;
                                 collection
