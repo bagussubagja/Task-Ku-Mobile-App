@@ -128,6 +128,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       titleController.clear();
                       descController.clear();
                       Navigator.of(context).pop();
+                      
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Task Successfully added!')));
                     },

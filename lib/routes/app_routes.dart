@@ -3,6 +3,7 @@ import 'package:task_ku_mobile_app/screens/body_screen/body_screen.dart';
 import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_one.dart';
 import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_three.dart';
 import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_two.dart';
+import 'package:task_ku_mobile_app/screens/notif_screen/notif_firebase_screen.dart';
 import 'package:task_ku_mobile_app/shared/page_state.dart';
 
 class AppRoute {
@@ -12,6 +13,7 @@ class AppRoute {
   static const String LoginRoute = '/login';
   static const String HomeRoute = '/home';
   static const String AuthRoute = '/auth';
+  static const String NotifFirebaseRoute = '/fcm-page';
 
   static final routes = {
     IntroScreenOneRoute: (context) => ScreenOne(),
@@ -19,6 +21,7 @@ class AppRoute {
     IntroScreenFinalRoute: (context) => ScreenThree(),
     LoginRoute: (context) => SignInScreen(),
     HomeRoute: (context) => BodyScreen(),
-    AuthRoute: (context) => PageState()
+    AuthRoute: (context) => PageState(),
+    NotifFirebaseRoute: (context) => NotifFirebaseScreen(),
   };
 }
