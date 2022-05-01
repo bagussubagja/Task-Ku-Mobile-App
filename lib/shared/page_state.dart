@@ -13,17 +13,17 @@ class PageState extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData) {
-              return BodyScreen();
+              return const BodyScreen();
             } else if (snapshot.hasError) {
-              return Center(
+              return const Center(
                 child: Text('Something went wrong!'),
               );
             } else {
-              return SignInScreen();
+              return const SignInScreen();
             }
           })),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
 import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_two.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
@@ -9,7 +10,7 @@ class ScreenOne extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/1.jpg'),
           fit: BoxFit.cover,
@@ -19,7 +20,7 @@ class ScreenOne extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   colors: [Colors.black, Colors.black26],
@@ -29,8 +30,13 @@ class ScreenOne extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: TextButton(
-                  onPressed: () {},
-                  child: Text(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return const SignInScreen();
+                    }));
+                  },
+                  child: const Text(
                     'Skip',
                     style: TextStyle(color: Colors.white),
                   )),
@@ -38,7 +44,7 @@ class ScreenOne extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 Padding(
@@ -47,23 +53,23 @@ class ScreenOne extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Get Productive Now!',
+                        'Welcome, buddy!',
                         style: titleStyle,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        'Task-ku menawarkan layanan yang dapat membuat kamu menjadi lebih produktif\ndaripada sebelumnya!',
+                        'Task-ku offers a service that can make you more productive than ever before!',
                         style: regularStyle.copyWith(fontSize: 14),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
                       Row(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(right: 5),
+                            margin: const EdgeInsets.only(right: 5),
                             width: 15.0,
                             height: 15.0,
                             decoration: BoxDecoration(
@@ -72,7 +78,7 @@ class ScreenOne extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(right: 5),
+                            margin: const EdgeInsets.only(right: 5),
                             width: 15.0,
                             height: 15.0,
                             decoration: BoxDecoration(
@@ -81,7 +87,7 @@ class ScreenOne extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(right: 5),
+                            margin: const EdgeInsets.only(right: 5),
                             width: 15.0,
                             height: 15.0,
                             decoration: BoxDecoration(
@@ -91,21 +97,21 @@ class ScreenOne extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Center(
-                          child: Container(
+                          child: SizedBox(
                         height: 50,
                         width: 220,
                         child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return ScreenTwo();
+                                return const ScreenTwo();
                               }));
                             },
-                            child: Text(
+                            child: const Text(
                               'Next',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),

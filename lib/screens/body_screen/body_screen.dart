@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/screens/body_screen/home.dart';
 import 'package:task_ku_mobile_app/screens/body_screen/articles.dart';
@@ -27,7 +29,7 @@ class _BodyScreenState extends State<BodyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.newspaper), label: 'Article'),
@@ -39,13 +41,37 @@ class _BodyScreenState extends State<BodyScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return AddTaskScreen();
+            return const AddTaskScreen();
           }));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+          actions: [
+            PopupMenuButton(
+                itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.exit_to_app),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final provider =
+                                    Provider.of<GoogleSignInProvider>(context,
+                                        listen: false);
+                                provider.logout();
+                              },
+                              style:
+                                  TextButton.styleFrom(primary: Colors.black),
+                              child: const Text('Sign Out'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ])
+          ],
           elevation: 0,
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black),

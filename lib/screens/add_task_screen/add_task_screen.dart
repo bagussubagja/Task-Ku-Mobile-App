@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
+import 'package:task_ku_mobile_app/widgets/notification.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
@@ -17,7 +20,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _endTime = DateFormat("hh:mm a")
-      .format(DateTime.now().add(Duration(hours: 2)))
+      .format(DateTime.now().add(const Duration(hours: 2)))
       .toString();
   bool isDone = false;
   final TextEditingController titleController = TextEditingController();
@@ -37,7 +40,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
           child: Column(
             children: [
               InputField(
@@ -45,7 +48,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 hintText: 'Enter your title...',
                 controller: titleController,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               InputField(
@@ -53,7 +56,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 hintText: 'Enter your description...',
                 controller: descController,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               InputField(
@@ -68,7 +71,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       color: greyColor,
                     )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -78,12 +81,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     titleText: 'Start Date',
                     hintText: _startTime,
                     widget: Container(),
-                    prefixIcon: Icon(Icons.access_time_rounded),
+                    prefixIcon: const Icon(Icons.access_time_rounded),
                     onTap: () {
                       _getTimeFromUser(isStartTime: true);
                     },
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   Expanded(
@@ -91,32 +94,26 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     titleText: 'End Date',
                     hintText: _endTime,
                     widget: Container(),
-                    prefixIcon: Icon(Icons.access_time_rounded),
+                    prefixIcon: const Icon(Icons.access_time_rounded),
                     onTap: () {
                       _getTimeFromUser(isStartTime: false);
                     },
                   ))
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: 290,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final title = titleController.text;
                       final desc = descController.text;
                       final selectedDate = _selectedDate;
                       final startTime = _startTime;
                       final endTime = _endTime;
-
-                      print(titleController.text);
-                      print(descController.text);
-                      print(_selectedDate);
-                      print(_startTime);
-                      print(_endTime);
 
                       createTodo(
                         title: title,
@@ -124,12 +121,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         taskDate: selectedDate,
                         startTime: startTime,
                         endTime: endTime,
+                        isDone: false,
                       );
                       titleController.clear();
                       descController.clear();
                       Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Task Successfully added!')));
+                      sendNotification(
+                          'Hi, your task "${title}" is already set up!',
+                          'We keep reminds you every day until its done!😁');
+                      sendNotificationPeriodically(
+                          'Hello, did your already finish your ${title} task?',
+                          'Dont worry, We make sure you never forget what is yours 😊');
+
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Task Successfully added!')));
                     },
                     child: Text(
                       'Add Task',
@@ -143,13 +148,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  Future createTodo({
-    required String title,
-    required String desc,
-    required DateTime taskDate,
-    required String startTime,
-    required String endTime,
-  }) async {
+  Future createTodo(
+      {required String title,
+      required String desc,
+      required DateTime taskDate,
+      required String startTime,
+      required String endTime,
+      required bool isDone}) async {
     final user = FirebaseAuth.instance.currentUser;
     final docTodo =
         FirebaseFirestore.instance.collection('todo-list ${user?.uid}').doc();
@@ -161,6 +166,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       taskDate: taskDate,
       startTask: startTime,
       endTask: endTime,
+      isDone: false,
     );
 
     final json = task.toJson();
@@ -172,7 +178,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     var pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime?.format(context) ?? '10:00 AM';
     if (pickedTime == null) {
-      print('Time is NULL');
     } else if (isStartTime == true) {
       setState(() {
         _startTime = _formatedTime;
@@ -205,10 +210,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (_pickerDate != null) {
       setState(() {
         _selectedDate = _pickerDate;
-        print(_selectedDate);
       });
-    } else {
-      print('something wrong!');
-    }
+    } else {}
   }
 }

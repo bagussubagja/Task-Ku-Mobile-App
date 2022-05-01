@@ -1,10 +1,12 @@
+// ignore_for_file: unused_field, unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
-import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/screens/edit_task_screen/edit_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
@@ -18,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   DateTime _selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('Howdy,',
                           style: regularBlackStyle.copyWith(fontSize: 18)),
                       Text(
-                        user?.displayName ?? 'Guest',
+                        user?.displayName ?? 'Workaholic!',
                         style: titleBlackStyle.copyWith(fontSize: 22),
                       )
                     ],
@@ -44,14 +47,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   CircleAvatar(
                     radius: 30,
                     backgroundImage: NetworkImage(user?.photoURL ??
-                        'https://img3.pngdownload.id/dy/1b9ce737ab4309d77f8ae34c5c4871b4/L0KzQYm3VsI3N6Z8i5H0aYP2gLBuTfF3aaVmip9Ac3X1PbT2jgB2fJZ3Rdtsb372PcT2hwR4aaNqRdZudnXvf8Hskr02amQ3T9VsOXPmQYbtV745P2M8SqkDMEG4Q4G3U8U1OGI9S6g3cH7q/kisspng-avatar-user-computer-icons-software-developer-5b327cc9cc15f7.872727801530035401836.png'),
+                        'https://img1.pngdownload.id/20180626/ehy/kisspng-avatar-user-computer-icons-software-developer-5b327cc951ae22.8377289615300354013346.jpg'),
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Container(
+              SizedBox(
                 child: DatePicker(
                   DateTime.now(),
                   height: 100,
@@ -64,11 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   dayTextStyle: TextStyle(fontSize: 12, color: greyColor),
                   onDateChange: (date) {
                     _selectedDate = date;
-                    print(_selectedDate);
                   },
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Row(
@@ -84,13 +86,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               StreamBuilder<List<TaskModel>>(
                 stream: readTasks(),
                 builder: (context, snapshot) {
-                  print(snapshot);
                   try {
                     if (snapshot.hasError) {
                       return Text('Something error ${snapshot.error}!');
@@ -104,12 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         shrinkWrap: true,
                       );
                     } else if (!snapshot.hasData) {
-                      return Text('No Data');
+                      return const Text('No Data');
                     } else {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
                   } catch (e) {
-                    return SizedBox();
+                    return const SizedBox();
                   }
                 },
               )
@@ -132,11 +133,9 @@ Stream<List<TaskModel>> readTasks() {
 }
 
 Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
-  bool isChecked = false;
-
   return Container(
-    margin: EdgeInsets.only(top: 15),
-    padding: EdgeInsets.fromLTRB(10, 12, 10, 12),
+    margin: const EdgeInsets.only(top: 15),
+    padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
     decoration: BoxDecoration(
         color: bluePrimaryColor, borderRadius: BorderRadius.circular(10)),
     child: Row(
@@ -150,25 +149,27 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
               style: titleStyle.copyWith(fontSize: 16),
             ),
             Text(
-              taskModel.title,
+              taskModel.title.length > 28
+                  ? taskModel.title.substring(0, 28) + '...'
+                  : taskModel.title,
               style: regularStyle,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text(
               'Description : ',
               style: titleStyle.copyWith(fontSize: 16),
             ),
-            Container(
+            SizedBox(
               child: Text(
-                taskModel.desc.length > 35
-                    ? taskModel.desc.substring(0, 35) + '...'
+                taskModel.desc.length > 30
+                    ? taskModel.desc.substring(0, 30) + '...'
                     : taskModel.desc,
                 style: regularStyle.copyWith(fontSize: 15),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
@@ -178,11 +179,11 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Start Time : ',
+                      'Task Date : ',
                       style: titleStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      taskModel.startTask,
+                      taskModel.taskDate.toString().substring(0, 10),
                       style: regularStyle,
                     ),
                   ],
@@ -191,11 +192,11 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnd Time : ',
+                      '\t\t\t\t\t\t\t\t\t\t\t\t\t Start Time : ',
                       style: titleStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + taskModel.endTask,
+                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + taskModel.startTask,
                       style: regularStyle,
                     ),
                   ],
@@ -217,48 +218,62 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                     );
                   }));
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.edit,
                   color: Colors.white,
                 )),
+            taskModel.isDone == false
+                ? const Icon(
+                    Icons.clear,
+                    color: Colors.white,
+                  )
+                : const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
             IconButton(
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Ini Judul'),
-                          content: Text('beneran mau dihapus?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                final user = FirebaseAuth.instance.currentUser;
-                                var collection = FirebaseFirestore.instance
-                                    .collection('todo-list ${user?.uid}');
-                                var snapshots = await collection.get();
-                                var doc = snapshots.docs;
-                                collection
-                                    .doc(snapshots.docs[index].id)
-                                    .delete();
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('Data telah dihapus!')));
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      });
-                },
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ))
+              onPressed: () async {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirm Message'),
+                        content: Text(
+                            'Are your sure to delete ${taskModel.title} task?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Cancel'),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              FlutterLocalNotificationsPlugin
+                                  flutterLocalNotificationsPlugin =
+                                  FlutterLocalNotificationsPlugin();
+                              final user = FirebaseAuth.instance.currentUser;
+                              var collection = FirebaseFirestore.instance
+                                  .collection('todo-list ${user?.uid}');
+                              var snapshots = await collection.get();
+                              var doc = snapshots.docs;
+                              collection.doc(snapshots.docs[index].id).delete();
+                              Navigator.pop(context);
+                              await flutterLocalNotificationsPlugin.cancelAll();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Your task successfully deleted!')));
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    });
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ],

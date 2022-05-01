@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
@@ -8,17 +10,17 @@ class InputField extends StatelessWidget {
   Widget? widget;
   Widget? prefixIcon;
   Function()? onTap;
-  int? maxLine;
-  InputField({
-    Key? key,
-    required this.titleText,
-    this.hintText,
-    this.controller,
-    this.widget,
-    this.onTap,
-    this.prefixIcon,
-    this.maxLine,
-  }) : super(key: key);
+  bool? obsecureText;
+  InputField(
+      {Key? key,
+      required this.titleText,
+      this.hintText,
+      this.controller,
+      this.widget,
+      this.onTap,
+      this.prefixIcon,
+      this.obsecureText})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,31 +28,31 @@ class InputField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         titleText.isEmpty
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : Text(
                 titleText,
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
               ),
-        SizedBox(
+       const SizedBox(
           height: 5,
         ),
-        Container(
+        SizedBox(
           height: 50,
           width: double.infinity,
           child: Row(
             children: [
               Expanded(
                 child: TextFormField(
-                  maxLines: maxLine,
+                  obscureText: obsecureText ?? false,
                   onTap: onTap,
                   readOnly: widget == null ? false : true,
                   controller: controller,
                   decoration: InputDecoration(
                     prefixIcon: prefixIcon,
-                    contentPadding: EdgeInsets.only(left: 10),
+                    contentPadding: const EdgeInsets.only(left: 10),
                     hintText: hintText,
                     hintStyle: regularStyle.copyWith(
-                        color: Color(0xffAAAAAA), fontSize: 14),
+                        color: const Color(0xffAAAAAA), fontSize: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -58,7 +60,7 @@ class InputField extends StatelessWidget {
                 ),
               ),
               widget == null
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Container(
                       child: widget,
                     )

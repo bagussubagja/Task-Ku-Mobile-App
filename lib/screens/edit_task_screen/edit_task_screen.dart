@@ -1,6 +1,10 @@
+// ignore_for_file: must_be_immutable, unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
@@ -18,6 +22,8 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   DateTime _selectedDate = DateTime.now();
 
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
@@ -31,8 +37,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    titleController.text = widget.taskModels.title;
+    descController.text = widget.taskModels.desc;
     _startTime = widget.taskModels.startTask;
     _endTime = widget.taskModels.endTask;
   }
@@ -52,7 +59,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
           child: Column(
             children: [
               InputField(
@@ -60,7 +67,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 hintText: widget.taskModels.title,
                 controller: titleController,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               InputField(
@@ -68,7 +75,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 hintText: widget.taskModels.desc,
                 controller: descController,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               InputField(
@@ -84,7 +91,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       color: greyColor,
                     )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -94,12 +101,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     titleText: 'Start Date',
                     hintText: _startTime,
                     widget: Container(),
-                    prefixIcon: Icon(Icons.access_time_rounded),
+                    prefixIcon: const Icon(Icons.access_time_rounded),
                     onTap: () {
                       _getTimeFromUser(isStartTime: true);
                     },
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   Expanded(
@@ -107,44 +114,65 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     titleText: 'End Date',
                     hintText: _endTime,
                     widget: Container(),
-                    prefixIcon: Icon(Icons.access_time_rounded),
+                    prefixIcon: const Icon(Icons.access_time_rounded),
                     onTap: () {
                       _getTimeFromUser(isStartTime: false);
                     },
                   ))
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Container(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Text('Do you already finish this task?'),
+                  Switch(
+                      value: isDone,
+                      onChanged: (value) {
+                        setState(() {
+                          isDone = true;
+                        });
+                      }),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
                 width: 290,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final title = titleController.text;
                       final desc = descController.text;
                       final selectedDate = _selectedDate;
-                      final startTime = _startTime;
-                      final endTime = _endTime;
-                      print(startTime);
                       try {
                         editTodo(
                             title: title,
                             desc: desc,
                             taskDate: selectedDate,
                             startTime: _startTime,
-                            endTime: _endTime);
+                            endTime: _endTime,
+                            isDone: isDone);
+
                         Navigator.of(context).pop();
                       } catch (e) {
-                        print(e.toString());
+                        if (kDebugMode) {
+                          print(e.toString());
+                        }
+                      }
+
+                      if (isDone == true) {
+                        await flutterLocalNotificationsPlugin.cancelAll();
                       }
 
                       titleController.clear();
                       descController.clear();
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Task Successfully edited!')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Task Successfully edited!')));
                     },
                     child: Text(
                       'Edit Task',
@@ -158,13 +186,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     );
   }
 
-  Future editTodo({
-    required String title,
-    required String desc,
-    required DateTime taskDate,
-    required String startTime,
-    required String endTime,
-  }) async {
+  Future editTodo(
+      {required String title,
+      required String desc,
+      required DateTime taskDate,
+      required String startTime,
+      required String endTime,
+      required bool isDone}) async {
     final user = FirebaseAuth.instance.currentUser;
     var collection =
         FirebaseFirestore.instance.collection('todo-list ${user?.uid}');
@@ -176,26 +204,23 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         desc: desc,
         taskDate: taskDate,
         startTask: startTime,
-        endTask: endTime);
+        endTask: endTime,
+        isDone: isDone);
     final json = editedTask.toJson();
-    print(json);
-    collection.doc(snapshots.docs[widget.index].id).update(json);
+    collection.doc(snapshots.docs[widget.index].id).set(json);
   }
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime?.format(context) ?? _endTime;
     if (pickedTime == null) {
-      print('Time is NULL');
     } else if (isStartTime == true) {
       setState(() {
         _startTime = _formatedTime;
-        print(_startTime);
       });
     } else if (isStartTime == false) {
       setState(() {
         _endTime = _formatedTime;
-        print(_endTime);
       });
     }
   }
@@ -221,10 +246,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     if (_pickerDate != null) {
       setState(() {
         _selectedDate = _pickerDate;
-        print(_selectedDate);
       });
-    } else {
-      print('something wrong!');
-    }
+    } else {}
   }
 }
