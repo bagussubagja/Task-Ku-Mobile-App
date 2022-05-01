@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
-import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/screens/edit_task_screen/edit_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('Howdy,',
                           style: regularBlackStyle.copyWith(fontSize: 18)),
                       Text(
-                        user?.displayName ?? 'Workaholic',
+                        user?.displayName ?? 'Workaholic!',
                         style: titleBlackStyle.copyWith(fontSize: 22),
                       )
                     ],
@@ -50,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Container(
+              SizedBox(
                 child: DatePicker(
                   DateTime.now(),
                   height: 100,
@@ -66,11 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   dayTextStyle: TextStyle(fontSize: 12, color: greyColor),
                   onDateChange: (date) {
                     _selectedDate = date;
-                    print(_selectedDate);
                   },
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Row(
@@ -86,13 +86,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               StreamBuilder<List<TaskModel>>(
                 stream: readTasks(),
                 builder: (context, snapshot) {
-                  print(snapshot);
                   try {
                     if (snapshot.hasError) {
                       return Text('Something error ${snapshot.error}!');
@@ -106,12 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         shrinkWrap: true,
                       );
                     } else if (!snapshot.hasData) {
-                      return Text('No Data');
+                      return const Text('No Data');
                     } else {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
                   } catch (e) {
-                    return SizedBox();
+                    return const SizedBox();
                   }
                 },
               )
@@ -135,8 +134,8 @@ Stream<List<TaskModel>> readTasks() {
 
 Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
   return Container(
-    margin: EdgeInsets.only(top: 15),
-    padding: EdgeInsets.fromLTRB(10, 12, 10, 12),
+    margin: const EdgeInsets.only(top: 15),
+    padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
     decoration: BoxDecoration(
         color: bluePrimaryColor, borderRadius: BorderRadius.circular(10)),
     child: Row(
@@ -155,14 +154,14 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   : taskModel.title,
               style: regularStyle,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text(
               'Description : ',
               style: titleStyle.copyWith(fontSize: 16),
             ),
-            Container(
+            SizedBox(
               child: Text(
                 taskModel.desc.length > 30
                     ? taskModel.desc.substring(0, 30) + '...'
@@ -170,7 +169,7 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                 style: regularStyle.copyWith(fontSize: 15),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
@@ -219,16 +218,16 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                     );
                   }));
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.edit,
                   color: Colors.white,
                 )),
             taskModel.isDone == false
-                ? Icon(
+                ? const Icon(
                     Icons.clear,
                     color: Colors.white,
                   )
-                : Icon(
+                : const Icon(
                     Icons.check,
                     color: Colors.white,
                   ),
@@ -238,8 +237,9 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Ini Judul'),
-                        content: Text('beneran mau dihapus?'),
+                        title: const Text('Confirm Message'),
+                        content: Text(
+                            'Are your sure to delete ${taskModel.title} task?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -259,8 +259,9 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                               Navigator.pop(context);
                               await flutterLocalNotificationsPlugin.cancelAll();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('Data telah dihapus!')));
+                                  const SnackBar(
+                                      content: Text(
+                                          'Your task successfully deleted!')));
                             },
                             child: const Text('OK'),
                           ),
@@ -268,7 +269,7 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                       );
                     });
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.delete,
                 color: Colors.white,
               ),

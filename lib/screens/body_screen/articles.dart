@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:task_ku_mobile_app/models/top_articles_model.dart';
 import 'package:task_ku_mobile_app/screens/article_list_screen/article_list_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ArticleScreen extends StatefulWidget {
   const ArticleScreen({Key? key}) : super(key: key);
@@ -36,13 +36,12 @@ class _ArticleScreenState extends State<ArticleScreen> {
                 style:
                     regularBlackStyle.copyWith(color: greyColor, fontSize: 14),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               StreamBuilder<List<TopArticlesModel>>(
                   stream: readTopArticles(),
                   builder: (context, snapshot) {
-                    print(snapshot);
                     try {
                       if (snapshot.hasError) {
                         return Text('Something error ${snapshot.error}');
@@ -61,22 +60,22 @@ class _ArticleScreenState extends State<ArticleScreen> {
                                 enlargeStrategy:
                                     CenterPageEnlargeStrategy.height));
                       } else if (!snapshot.hasData) {
-                        return Text('No data!');
+                        return const Text('No data!');
                       } else {
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       }
                     } catch (e) {
                       return Text(e.toString());
                     }
                   }),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: const EdgeInsets.only(left: 10),
                     child: Text(
                       'New Article',
                       style: titleBlackStyle.copyWith(fontSize: 18),
@@ -86,20 +85,19 @@ class _ArticleScreenState extends State<ArticleScreen> {
                       onPressed: () {
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return ArticleListScreen();
+                          return const ArticleListScreen();
                         }));
                       },
-                      child: Text('See More..'))
+                      child: const Text('See More..'))
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               Expanded(
                 child: StreamBuilder<List<ArticleModel>>(
                     stream: readArticles(),
                     builder: (context, snapshot) {
-                      print(snapshot);
                       try {
                         if (snapshot.hasError) {
                           return Text('Something error ${snapshot.error}');
@@ -110,9 +108,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
                               itemBuilder: (context, index) => buildArticles(
                                   articles[index], index, context));
                         } else if (!snapshot.hasData) {
-                          return Text('No Data');
+                          return const Text('No Data');
                         } else {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         }
                       } catch (e) {
                         return Text(e.toString());
@@ -151,13 +149,13 @@ Widget buildArticles(
     ArticleModel articleModel, int index, BuildContext context) {
   return Card(
     child: ListTile(
-      leading: Container(
+      leading: SizedBox(
         child: CachedNetworkImage(
           imageUrl: articleModel.imgUrl,
           height: 50,
           width: 80,
           fit: BoxFit.cover,
-          placeholder: (context, url) => Center(
+          placeholder: (context, url) => const Center(
             child: CircularProgressIndicator(),
           ),
         ),
@@ -187,18 +185,18 @@ Widget buildArticles(
 Widget buildTopArticleModel(
     TopArticlesModel topArticlesModel, int index, BuildContext context) {
   return Container(
-    margin: EdgeInsets.only(left: 10, right: 10),
+    margin: const EdgeInsets.only(left: 10, right: 10),
     child: Stack(
       children: [
-        Container(
+        SizedBox(
           child: CachedNetworkImage(
             imageUrl: topArticlesModel.imgUrl,
-            placeholder: (context, url) => Center(
+            placeholder: (context, url) => const Center(
               child: CircularProgressIndicator(),
             ),
             errorWidget: (context, url, error) => Container(
               color: Colors.black12,
-              child: Icon(
+              child: const Icon(
                 Icons.error,
                 color: Colors.red,
               ),
@@ -211,7 +209,7 @@ Widget buildTopArticleModel(
         // ),
         Container(
           height: 180,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomRight,
               colors: [Colors.black, Colors.black26],
@@ -219,7 +217,7 @@ Widget buildTopArticleModel(
           ),
         ),
         Container(
-          padding: EdgeInsets.only(left: 10, bottom: 10),
+          padding: const EdgeInsets.only(left: 10, bottom: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,9 +230,9 @@ Widget buildTopArticleModel(
                 onTap: () async {
                   if (await launch(topArticlesModel.link,
                       forceWebView: true, enableJavaScript: true)) {
-                    debugPrint('done');
+                    debugPrint('Open');
                   } else {
-                    debugPrint('no');
+                    debugPrint('No');
                   }
                 },
                 child: Text(

@@ -1,27 +1,31 @@
+// ignore_for_file: await_only_futures, unused_local_variable
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
-import 'package:task_ku_mobile_app/screens/notif_screen/notif_firebase_screen.dart';
+import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_one.dart';
 import 'package:task_ku_mobile_app/shared/page_state.dart';
 
-Future<void> _handleBGNotification(RemoteMessage message) async {
-  print("BACKGROUND NOTIF LISTENING");
-  print(message.notification);
-  print('-----------------------------');
-  print("Handling a background message: ${message.messageId}");
-}
+int? initScreen = 0;
+
+Future<void> _handleBGNotification(RemoteMessage message) async {}
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  initScreen = await preferences.getInt('initScreen');
+  await preferences.setInt('initScreen', 1);
   await Firebase.initializeApp();
   await requestPermission();
   FirebaseMessaging.onBackgroundMessage(_handleBGNotification);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> requestPermission() async {
@@ -37,11 +41,17 @@ Future<void> requestPermission() async {
     sound: true,
   );
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    print('User granted permission');
+    if (kDebugMode) {
+      print('User granted permission');
+    }
   } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-    print('User granted provisional permission');
+    if (kDebugMode) {
+      print('User granted provisional permission');
+    }
   } else {
-    print('User declined or has not accepted permission');
+    if (kDebugMode) {
+      print('User declined or has not accepted permission');
+    }
   }
 }
 
@@ -55,16 +65,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
-
-    // ketika notif di klik dan keadaannya on terminated
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        print(message.data);
-        print(message.notification?.title);
-        var _routeName = message.data['route'];
-        print(_routeName);
-        Navigator.of(context).pushNamed('/fcm-page');
+        Navigator.of(context).pushNamed('/pagestate');
       }
     });
 
@@ -78,10 +81,14 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
-        routes: {'/fcm-page': (_) => NotifFirebaseScreen()},
+        routes: {
+          'onboard': (context) => const ScreenOne(),
+          'pagestate': (context) => const PageState(),
+        },
         title: 'Task Ku Mobile App',
         theme: ThemeData(fontFamily: 'Poppins'),
-        home: PageState(),
+        initialRoute:
+            initScreen == 0 || initScreen == null ? 'onboard' : 'pagestate',
       ),
     );
   }

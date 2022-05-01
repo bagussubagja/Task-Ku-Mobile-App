@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_ku_mobile_app/routes/app_routes.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 
@@ -10,7 +9,7 @@ class ScreenThree extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/3.jpg'),
           fit: BoxFit.cover,
@@ -20,7 +19,7 @@ class ScreenThree extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       colors: [Colors.black, Colors.black26])),
@@ -28,7 +27,7 @@ class ScreenThree extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 Padding(
@@ -40,20 +39,20 @@ class ScreenThree extends StatelessWidget {
                         'Get Productive Now!',
                         style: titleStyle,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        'Task-ku menawarkan layanan yang dapat membuat kamu menjadi lebih produktif\ndaripada sebelumnya!',
+                        'Task-ku will be a friend who always accompanies you!',
                         style: regularStyle.copyWith(fontSize: 14),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
                       Row(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(right: 5),
+                            margin: const EdgeInsets.only(right: 5),
                             width: 15.0,
                             height: 15.0,
                             decoration: BoxDecoration(
@@ -62,16 +61,16 @@ class ScreenThree extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(right: 5),
+                            margin: const EdgeInsets.only(right: 5),
                             width: 15.0,
                             height: 15.0,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.grey,
                               shape: BoxShape.circle,
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(right: 5),
+                            margin: const EdgeInsets.only(right: 5),
                             width: 15.0,
                             height: 15.0,
                             decoration: BoxDecoration(
@@ -81,21 +80,21 @@ class ScreenThree extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Center(
-                          child: Container(
+                          child: SizedBox(
                         height: 50,
                         width: 220,
                         child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return SignInScreen();
+                                return const SignInScreen();
                               }));
                             },
-                            child: Text(
+                            child: const Text(
                               'Get Started',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),

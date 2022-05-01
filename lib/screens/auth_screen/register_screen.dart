@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:task_ku_mobile_app/main.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
 import 'package:task_ku_mobile_app/shared/page_state.dart';
@@ -26,7 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
             child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
           child: Column(
             children: [
               Center(
@@ -36,15 +34,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       'Register',
                       style: titleStyle.copyWith(color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Text(
-                      'Selamat datang di Task-ku!\nAplikasi yang dapat membuat tugasmu lebih mudah.',
+                      'Welcome to Task-ku Mobile App!\nAn application that can make your task easier.',
                       textAlign: TextAlign.center,
                       style: regularStyle.copyWith(color: greyColor),
                     ),
-                    Container(
+                    SizedBox(
                       height: 275,
                       width: double.infinity,
                       child: Lottie.network(
@@ -55,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: emailController,
                       hintText: "Enter your email...",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     InputField(
@@ -64,14 +62,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: passwordController,
                       hintText: "Enter your password...",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
-                    Container(
+                    SizedBox(
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Email and Password Successfully registered! Now you can login with email and password')));
                             signUp();
                           },
                           child: Text(
@@ -91,52 +93,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return SignInScreen();
+                                return const SignInScreen();
                               }));
                             },
-                            child: Text('Login Now!')),
+                            child: const Text('Login Now!')),
                       ],
                     ),
-                    // SizedBox(
-                    //   height: 15,
-                    // ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 5),
+                          margin: const EdgeInsets.only(right: 5),
                           height: 1,
                           width: 115,
                           color: greyColor,
                         ),
-                        Text('or Sign up With'),
+                        const Text('or Sign up With'),
                         Container(
-                          margin: EdgeInsets.only(left: 5),
+                          margin: const EdgeInsets.only(left: 5),
                           height: 1,
                           width: 115,
                           color: greyColor,
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     InkWell(
                       onTap: () {
-                        // final provider = Provider.of<GoogleSignInProvider>(
-                        //     context,
-                        //     listen: false);
-                        // provider.googleLogin();
-                        // Navigator.of(context).pushNamedAndRemoveUntil(
-                        //     AppRoute.HomeRoute, (route) => false);
                         final provider = Provider.of<GoogleSignInProvider>(
                             context,
                             listen: false);
                         provider.googleLogin();
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return PageState();
+                          return const PageState();
                         }));
                       },
                       child: Container(
@@ -153,7 +146,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 'assets/images/google-logo.png',
                                 scale: 35,
                               ),
-                              Text(
+                              const Text(
                                 'Login With Google',
                               )
                             ],
@@ -175,18 +168,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      if (mounted) {
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => Center(
-                  child: CircularProgressIndicator(),
-                ));
-      }
     } on FirebaseAuthException catch (e) {
       return ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message.toString())));
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

@@ -6,8 +6,8 @@ void sendNotification(String? title, String? body) async {
   // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
-  final IOSInitializationSettings initializationSettingsIOS =
-      IOSInitializationSettings(
+  IOSInitializationSettings initializationSettingsIOS =
+      const IOSInitializationSettings(
     requestSoundPermission: true,
     requestBadgePermission: true,
     requestAlertPermission: true,
@@ -37,8 +37,8 @@ void sendNotificationPeriodically(String? title, String? body) async {
   // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
-  final IOSInitializationSettings initializationSettingsIOS =
-      IOSInitializationSettings(
+  IOSInitializationSettings initializationSettingsIOS =
+      const IOSInitializationSettings(
     requestSoundPermission: true,
     requestBadgePermission: true,
     requestAlertPermission: true,

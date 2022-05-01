@@ -22,12 +22,20 @@ class AboutScreen extends StatelessWidget {
                 'About Us',
                 style: titleBlackStyle,
               ),
-              Container(
+              SizedBox(
                 height: 300,
                 width: double.infinity,
                 child: Lottie.network(
                     'https://assets8.lottiefiles.com/packages/lf20_ogsy6fuk.json'),
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Task-Ku Mobile App is a mobile-based application that can make it easy for you to organize and remember the tasks you have!',
+                textAlign: TextAlign.center,
+                style: regularBlackStyle,
+              )
             ],
           ),
         ),

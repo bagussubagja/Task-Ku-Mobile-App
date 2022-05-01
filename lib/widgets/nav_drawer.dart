@@ -1,19 +1,19 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:provider/provider.dart';
-import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/about_screen/about_screen.dart';
-import 'package:task_ku_mobile_app/screens/help_center_screen/help_center_screen.dart';
-import 'package:task_ku_mobile_app/screens/setting_screen/setting_screen.dart';
 
 class NavBar extends StatelessWidget {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  NavBar({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
+
     return Drawer(
       child: ListView(
         children: [
@@ -23,27 +23,19 @@ class NavBar extends StatelessWidget {
             width: 100,
             child: Image.asset('assets/images/Logo_App_Full_Name.png'),
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.info_outline_rounded),
-            title: Text('About'),
+            leading: const Icon(Icons.info_outline_rounded),
+            title: const Text('About'),
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) {
-              return AboutScreen();
+              return const AboutScreen();
             })),
           ),
+         const Divider(),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) {
-              return SettingScreen();
-            })),
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Delete All Task'),
+            leading: const Icon(Icons.delete),
+            title: const Text('Delete All Task'),
             onTap: () async {
               final user = FirebaseAuth.instance.currentUser;
               var collection = FirebaseFirestore.instance
@@ -54,17 +46,8 @@ class NavBar extends StatelessWidget {
               }
               await flutterLocalNotificationsPlugin.cancelAll();
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Semua data telah dihapus!')));
+                  const SnackBar(content: Text('Your tasks successfully deleted!')));
               Navigator.of(context).pop();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Sign Out'),
-            onTap: () {
-              final provider =
-                  Provider.of<GoogleSignInProvider>(context, listen: false);
-              provider.logout();
             },
           ),
         ],

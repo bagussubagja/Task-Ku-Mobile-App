@@ -1,11 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:task_ku_mobile_app/main.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
-import 'package:task_ku_mobile_app/routes/app_routes.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/forgotpw_screen.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/register_screen.dart';
 import 'package:task_ku_mobile_app/shared/page_state.dart';
@@ -28,7 +25,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
             child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
           child: Column(
             children: [
               Center(
@@ -38,26 +35,26 @@ class _SignInScreenState extends State<SignInScreen> {
                       'Login',
                       style: titleStyle.copyWith(color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Text(
-                      'Selamat datang di Task-ku!\nAplikasi yang dapat membuat tugasmu lebih mudah.',
+                      'Welcome to Task-ku Mobile App!\nAn application that can make your task easier.',
                       textAlign: TextAlign.center,
                       style: regularStyle.copyWith(color: greyColor),
                     ),
-                    Container(
-                      height: 275,
+                    SizedBox(
+                      height: 300,
                       width: double.infinity,
                       child: Lottie.network(
-                          'https://assets3.lottiefiles.com/private_files/lf30_fw6h59eu.json'),
+                          'https://assets1.lottiefiles.com/packages/lf20_umqaz2yv.json'),
                     ),
                     InputField(
                       titleText: '',
                       controller: emailController,
                       hintText: "Enter your email...",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     InputField(
@@ -72,15 +69,15 @@ class _SignInScreenState extends State<SignInScreen> {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return ForgotPasswordScreen();
+                              return const ForgotPasswordScreen();
                             }));
                           },
-                          child: Text(
+                          child: const Text(
                             'Recovery Password',
                             style: TextStyle(fontSize: 12),
                           )),
                     ),
-                    Container(
+                    SizedBox(
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
@@ -104,52 +101,43 @@ class _SignInScreenState extends State<SignInScreen> {
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return SignUpScreen();
+                                return const SignUpScreen();
                               }));
                             },
-                            child: Text('Register Now!')),
+                            child: const Text('Register Now!')),
                       ],
                     ),
-                    // SizedBox(
-                    //   height: 15,
-                    // ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 5),
+                          margin: const EdgeInsets.only(right: 5),
                           height: 1,
                           width: 120,
                           color: greyColor,
                         ),
-                        Text('or'),
+                        const Text('or'),
                         Container(
-                          margin: EdgeInsets.only(left: 5),
+                          margin: const EdgeInsets.only(left: 5),
                           height: 1,
                           width: 120,
                           color: greyColor,
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     InkWell(
                       onTap: () {
-                        // final provider = Provider.of<GoogleSignInProvider>(
-                        //     context,
-                        //     listen: false);
-                        // provider.googleLogin();
-                        // Navigator.of(context).pushNamedAndRemoveUntil(
-                        //     AppRoute.HomeRoute, (route) => false);
                         final provider = Provider.of<GoogleSignInProvider>(
                             context,
                             listen: false);
                         provider.googleLogin();
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return PageState();
+                          return const PageState();
                         }));
                       },
                       child: Container(
@@ -160,14 +148,13 @@ class _SignInScreenState extends State<SignInScreen> {
                               border: Border.all(color: bluePrimaryColor),
                               color: Colors.white),
                           child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Image.asset(
                                 'assets/images/google-logo.png',
                                 scale: 35,
                               ),
-                              Text(
+                              const Text(
                                 'Login With Google',
                               )
                             ],
@@ -189,18 +176,9 @@ class _SignInScreenState extends State<SignInScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      if (mounted) {
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => Center(
-                  child: CircularProgressIndicator(),
-                ));
-      }
     } on FirebaseAuthException catch (e) {
       return ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message.toString())));
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

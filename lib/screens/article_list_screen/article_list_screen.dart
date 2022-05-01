@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,7 @@ class ArticleListScreen extends StatelessWidget {
               StreamBuilder<List<ArticleModel>>(
                   stream: readArticles(),
                   builder: (context, snapshot) {
-                    print(snapshot);
+                    
                     try {
                       if (snapshot.hasError) {
                         return Text('Something error ${snapshot.error}');
@@ -43,9 +45,9 @@ class ArticleListScreen extends StatelessWidget {
                           shrinkWrap: true,
                         );
                       } else if (!snapshot.hasData) {
-                        return Text('No Data');
+                        return const Text('No Data');
                       } else {
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       }
                     } catch (e) {
                       return Text(e.toString());
@@ -71,13 +73,13 @@ class ArticleListScreen extends StatelessWidget {
       ArticleModel articleModel, int index, BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Container(
+        leading: SizedBox(
           child: CachedNetworkImage(
             imageUrl: articleModel.imgUrl,
             height: 50,
             width: 80,
             fit: BoxFit.cover,
-            placeholder: (context, url) => Center(
+            placeholder: (context, url) => const Center(
               child: CircularProgressIndicator(),
             ),
           ),

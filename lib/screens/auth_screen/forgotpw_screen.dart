@@ -4,8 +4,6 @@ import 'package:lottie/lottie.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
 
-import '../../main.dart';
-
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
 
@@ -25,38 +23,38 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
           child: Column(
             children: [
               Text(
                 'Forgot Password',
                 style: titleStyle.copyWith(color: Colors.black),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text(
-                'Selamat datang di Task-ku!\nAplikasi yang dapat membuat tugasmu lebih mudah.',
+                'Welcome to Task-ku Mobile App!\nAn application that can make your task easier.',
                 textAlign: TextAlign.center,
                 style: regularStyle.copyWith(color: greyColor),
               ),
-              SizedBox(height: 20),
-              Container(
+              const SizedBox(height: 20),
+              SizedBox(
                 height: 250,
                 width: double.infinity,
                 child: Lottie.network(
                     'https://assets2.lottiefiles.com/packages/lf20_teaf529w.json'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               InputField(
                 titleText: '',
                 controller: emailController,
                 hintText: "Enter your email...",
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
@@ -79,21 +77,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
-      // if (mounted) {
-      //   showDialog(
-      //       context: context,
-      //       barrierDismissible: false,
-      //       builder: (context) => Center(
-      //             child: CircularProgressIndicator(),
-      //           ));
-      // }
     } on FirebaseAuthException catch (e) {
       return ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message.toString())));
     }
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Check your email to reset your password!')));
-    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Check your email to reset your password!')));
   }
 }

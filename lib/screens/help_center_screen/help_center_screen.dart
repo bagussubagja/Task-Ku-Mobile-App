@@ -22,7 +22,7 @@ class HelpCenterScreen extends StatelessWidget {
                 'Help Center',
                 style: titleBlackStyle,
               ),
-              Container(
+              SizedBox(
                 height: 300,
                 width: double.infinity,
                 child: Lottie.network(

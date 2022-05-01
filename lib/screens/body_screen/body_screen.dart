@@ -4,7 +4,6 @@ import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/screens/body_screen/home.dart';
 import 'package:task_ku_mobile_app/screens/body_screen/articles.dart';
-import 'package:task_ku_mobile_app/screens/setting_screen/setting_screen.dart';
 import 'package:task_ku_mobile_app/widgets/nav_drawer.dart';
 
 class BodyScreen extends StatefulWidget {
@@ -30,7 +29,7 @@ class _BodyScreenState extends State<BodyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.newspaper), label: 'Article'),
@@ -42,10 +41,10 @@ class _BodyScreenState extends State<BodyScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return AddTaskScreen();
+            return const AddTaskScreen();
           }));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -53,29 +52,22 @@ class _BodyScreenState extends State<BodyScreen> {
             PopupMenuButton(
                 itemBuilder: (context) => [
                       PopupMenuItem(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return SettingScreen();
-                            }));
-                          },
-                          style: TextButton.styleFrom(primary: Colors.black),
-                          child: Text('Setting'),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            final provider = Provider.of<GoogleSignInProvider>(
-                                context,
-                                listen: false);
-                            provider.logout();
-                          },
-                          style: TextButton.styleFrom(primary: Colors.black),
-                          child: Text('Sign Out'),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.exit_to_app),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final provider =
+                                    Provider.of<GoogleSignInProvider>(context,
+                                        listen: false);
+                                provider.logout();
+                              },
+                              style:
+                                  TextButton.styleFrom(primary: Colors.black),
+                              child: const Text('Sign Out'),
+                            ),
+                          ],
                         ),
                       ),
                     ])

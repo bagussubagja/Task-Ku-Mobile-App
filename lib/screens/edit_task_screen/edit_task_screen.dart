@@ -1,5 +1,8 @@
+// ignore_for_file: must_be_immutable, unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +37,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     titleController.text = widget.taskModels.title;
     descController.text = widget.taskModels.desc;
@@ -57,7 +59,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
           child: Column(
             children: [
               InputField(
@@ -65,7 +67,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 hintText: widget.taskModels.title,
                 controller: titleController,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               InputField(
@@ -73,7 +75,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 hintText: widget.taskModels.desc,
                 controller: descController,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               InputField(
@@ -89,7 +91,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       color: greyColor,
                     )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -99,12 +101,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     titleText: 'Start Date',
                     hintText: _startTime,
                     widget: Container(),
-                    prefixIcon: Icon(Icons.access_time_rounded),
+                    prefixIcon: const Icon(Icons.access_time_rounded),
                     onTap: () {
                       _getTimeFromUser(isStartTime: true);
                     },
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   Expanded(
@@ -112,34 +114,33 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                     titleText: 'End Date',
                     hintText: _endTime,
                     widget: Container(),
-                    prefixIcon: Icon(Icons.access_time_rounded),
+                    prefixIcon: const Icon(Icons.access_time_rounded),
                     onTap: () {
                       _getTimeFromUser(isStartTime: false);
                     },
                   ))
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('Do you finish this task?'),
+                  const Text('Do you already finish this task?'),
                   Switch(
                       value: isDone,
                       onChanged: (value) {
                         setState(() {
                           isDone = true;
-                          print(isDone);
                         });
                       }),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: 290,
                 height: 50,
                 child: ElevatedButton(
@@ -147,9 +148,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       final title = titleController.text;
                       final desc = descController.text;
                       final selectedDate = _selectedDate;
-                      final startTime = _startTime;
-                      final endTime = _endTime;
-                      print(startTime);
                       try {
                         editTodo(
                             title: title,
@@ -161,7 +159,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
                         Navigator.of(context).pop();
                       } catch (e) {
-                        print(e.toString());
+                        if (kDebugMode) {
+                          print(e.toString());
+                        }
                       }
 
                       if (isDone == true) {
@@ -171,8 +171,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       titleController.clear();
                       descController.clear();
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Task Successfully edited!')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Task Successfully edited!')));
                     },
                     child: Text(
                       'Edit Task',
@@ -207,7 +207,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         endTask: endTime,
         isDone: isDone);
     final json = editedTask.toJson();
-    print(json);
     collection.doc(snapshots.docs[widget.index].id).set(json);
   }
 
@@ -215,16 +214,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     var pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime?.format(context) ?? _endTime;
     if (pickedTime == null) {
-      print('Time is NULL');
     } else if (isStartTime == true) {
       setState(() {
         _startTime = _formatedTime;
-        print(_startTime);
       });
     } else if (isStartTime == false) {
       setState(() {
         _endTime = _formatedTime;
-        print(_endTime);
       });
     }
   }
@@ -250,10 +246,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     if (_pickerDate != null) {
       setState(() {
         _selectedDate = _pickerDate;
-        print(_selectedDate);
       });
-    } else {
-      print('something wrong!');
-    }
+    } else {}
   }
 }
