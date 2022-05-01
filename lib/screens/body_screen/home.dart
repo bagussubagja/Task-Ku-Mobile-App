@@ -132,7 +132,6 @@ Stream<List<TaskModel>> readTasks() {
 }
 
 Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
-  bool isChecked = false;
 
   return Container(
     margin: EdgeInsets.only(top: 15),
@@ -150,7 +149,9 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
               style: titleStyle.copyWith(fontSize: 16),
             ),
             Text(
-              taskModel.title,
+              taskModel.title.length > 28
+                  ? taskModel.title.substring(0, 28) + '...'
+                  : taskModel.title,
               style: regularStyle,
             ),
             SizedBox(
@@ -162,8 +163,8 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
             ),
             Container(
               child: Text(
-                taskModel.desc.length > 35
-                    ? taskModel.desc.substring(0, 35) + '...'
+                taskModel.desc.length > 30
+                    ? taskModel.desc.substring(0, 30) + '...'
                     : taskModel.desc,
                 style: regularStyle.copyWith(fontSize: 15),
               ),
@@ -178,11 +179,11 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Start Time : ',
+                      'Task Date : ',
                       style: titleStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      taskModel.startTask,
+                      taskModel.taskDate.toString().substring(0, 10),
                       style: regularStyle,
                     ),
                   ],
@@ -191,11 +192,11 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnd Time : ',
+                      '\t\t\t\t\t\t\t\t\t\t\t\t\t Start Time : ',
                       style: titleStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + taskModel.endTask,
+                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + taskModel.startTask,
                       style: regularStyle,
                     ),
                   ],
@@ -206,6 +207,15 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
         ),
         Column(
           children: [
+            taskModel.isDone == false
+                ? Icon(
+                    Icons.clear,
+                    color: Colors.white,
+                  )
+                : Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
             IconButton(
                 onPressed: () {
                   Navigator.of(context)
@@ -222,43 +232,42 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   color: Colors.white,
                 )),
             IconButton(
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Ini Judul'),
-                          content: Text('beneran mau dihapus?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                final user = FirebaseAuth.instance.currentUser;
-                                var collection = FirebaseFirestore.instance
-                                    .collection('todo-list ${user?.uid}');
-                                var snapshots = await collection.get();
-                                var doc = snapshots.docs;
-                                collection
-                                    .doc(snapshots.docs[index].id)
-                                    .delete();
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('Data telah dihapus!')));
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      });
-                },
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ))
+              onPressed: () async {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Ini Judul'),
+                        content: Text('beneran mau dihapus?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Cancel'),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              final user = FirebaseAuth.instance.currentUser;
+                              var collection = FirebaseFirestore.instance
+                                  .collection('todo-list ${user?.uid}');
+                              var snapshots = await collection.get();
+                              var doc = snapshots.docs;
+                              collection.doc(snapshots.docs[index].id).delete();
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('Data telah dihapus!')));
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    });
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ],

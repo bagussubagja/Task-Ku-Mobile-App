@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
@@ -18,6 +19,8 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   DateTime _selectedDate = DateTime.now();
 
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
@@ -33,6 +36,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    titleController.text = widget.taskModels.title;
+    descController.text = widget.taskModels.desc;
     _startTime = widget.taskModels.startTask;
     _endTime = widget.taskModels.endTask;
   }
@@ -117,11 +122,28 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               SizedBox(
                 height: 20,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text('Do you finish this task?'),
+                  Switch(
+                      value: isDone,
+                      onChanged: (value) {
+                        setState(() {
+                          isDone = true;
+                          print(isDone);
+                        });
+                      }),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 width: 290,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final title = titleController.text;
                       final desc = descController.text;
                       final selectedDate = _selectedDate;
@@ -134,10 +156,16 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                             desc: desc,
                             taskDate: selectedDate,
                             startTime: _startTime,
-                            endTime: _endTime);
+                            endTime: _endTime,
+                            isDone: isDone);
+
                         Navigator.of(context).pop();
                       } catch (e) {
                         print(e.toString());
+                      }
+
+                      if (isDone == true) {
+                        await flutterLocalNotificationsPlugin.cancelAll();
                       }
 
                       titleController.clear();
@@ -158,13 +186,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     );
   }
 
-  Future editTodo({
-    required String title,
-    required String desc,
-    required DateTime taskDate,
-    required String startTime,
-    required String endTime,
-  }) async {
+  Future editTodo(
+      {required String title,
+      required String desc,
+      required DateTime taskDate,
+      required String startTime,
+      required String endTime,
+      required bool isDone}) async {
     final user = FirebaseAuth.instance.currentUser;
     var collection =
         FirebaseFirestore.instance.collection('todo-list ${user?.uid}');
@@ -176,10 +204,11 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         desc: desc,
         taskDate: taskDate,
         startTask: startTime,
-        endTask: endTime);
+        endTask: endTime,
+        isDone: isDone);
     final json = editedTask.toJson();
     print(json);
-    collection.doc(snapshots.docs[widget.index].id).update(json);
+    collection.doc(snapshots.docs[widget.index].id).set(json);
   }
 
   _getTimeFromUser({required bool isStartTime}) async {

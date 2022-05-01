@@ -66,18 +66,7 @@ class _MyAppState extends State<MyApp> {
       }
     });
 
-    // ketika notif di klik dan keadaannya on background
-    FirebaseMessaging.onMessageOpenedApp.listen((event) {});
 
-    // ketika notif di klik dan keadaannya on foreground
-    FirebaseMessaging.onMessage.listen((event) {
-      if (event.notification != null) {
-        // notif masuk
-        print(event.notification?.title);
-      } else {
-        print('nggak ada notif');
-      }
-    });
     super.initState();
   }
 

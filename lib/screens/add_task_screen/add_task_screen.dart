@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
+import 'package:task_ku_mobile_app/widgets/notification.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
@@ -105,7 +107,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 width: 290,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final title = titleController.text;
                       final desc = descController.text;
                       final selectedDate = _selectedDate;
@@ -124,11 +126,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         taskDate: selectedDate,
                         startTime: startTime,
                         endTime: endTime,
+                        isDone: false,
                       );
                       titleController.clear();
                       descController.clear();
                       Navigator.of(context).pop();
-                      
+                      sendNotification(
+                          'Hi, kamu berhasil nambahin tugas ${title}',
+                          'Kamu akan diingetin perharinya ya😁');
+                      sendNotificationPeriodically(
+                          'Hallo, kamu udah beresin tugas ${title} belum?',
+                          'Kalo belum, yuk beresin tugasnya lagi ya😊');
+
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Task Successfully added!')));
                     },
@@ -144,13 +153,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  Future createTodo({
-    required String title,
-    required String desc,
-    required DateTime taskDate,
-    required String startTime,
-    required String endTime,
-  }) async {
+  Future createTodo(
+      {required String title,
+      required String desc,
+      required DateTime taskDate,
+      required String startTime,
+      required String endTime,
+      required bool isDone}) async {
     final user = FirebaseAuth.instance.currentUser;
     final docTodo =
         FirebaseFirestore.instance.collection('todo-list ${user?.uid}').doc();
@@ -162,6 +171,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       taskDate: taskDate,
       startTask: startTime,
       endTask: endTime,
+      isDone: false,
     );
 
     final json = task.toJson();
