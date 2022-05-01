@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:task_ku_mobile_app/main.dart';
+import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/signin_screen.dart';
+import 'package:task_ku_mobile_app/shared/page_state.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
 
@@ -55,6 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     InputField(
                       titleText: '',
+                      obsecureText: true,
                       controller: passwordController,
                       hintText: "Enter your password...",
                     ),
@@ -65,7 +71,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            signUp();
+                          },
                           child: Text(
                             'Register',
                             style: regularStyle,
@@ -114,40 +122,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: bluePrimaryColor),
-                                color: Colors.white),
-                            child: Image.asset(
-                              'assets/images/google-logo.png',
-                              scale: 25,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: bluePrimaryColor),
-                                color: Colors.white),
-                            child: Image.asset(
-                              'assets/images/google-logo.png',
-                              scale: 25,
-                            ),
-                          ),
-                        ),
-                      ],
+                    InkWell(
+                      onTap: () {
+                        // final provider = Provider.of<GoogleSignInProvider>(
+                        //     context,
+                        //     listen: false);
+                        // provider.googleLogin();
+                        // Navigator.of(context).pushNamedAndRemoveUntil(
+                        //     AppRoute.HomeRoute, (route) => false);
+                        final provider = Provider.of<GoogleSignInProvider>(
+                            context,
+                            listen: false);
+                        provider.googleLogin();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return PageState();
+                        }));
+                      },
+                      child: Container(
+                          height: 50,
+                          width: 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: bluePrimaryColor),
+                              color: Colors.white),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Image.asset(
+                                'assets/images/google-logo.png',
+                                scale: 35,
+                              ),
+                              Text(
+                                'Login With Google',
+                              )
+                            ],
+                          )),
                     )
                   ],
                 ),
@@ -157,5 +167,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         )),
       ),
     );
+  }
+
+  Future signUp() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      if (mounted) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => Center(
+                  child: CircularProgressIndicator(),
+                ));
+      }
+    } on FirebaseAuthException catch (e) {
+      return ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message.toString())));
+    }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

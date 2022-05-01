@@ -8,17 +8,17 @@ class InputField extends StatelessWidget {
   Widget? widget;
   Widget? prefixIcon;
   Function()? onTap;
-  int? maxLine;
-  InputField({
-    Key? key,
-    required this.titleText,
-    this.hintText,
-    this.controller,
-    this.widget,
-    this.onTap,
-    this.prefixIcon,
-    this.maxLine,
-  }) : super(key: key);
+  bool? obsecureText;
+  InputField(
+      {Key? key,
+      required this.titleText,
+      this.hintText,
+      this.controller,
+      this.widget,
+      this.onTap,
+      this.prefixIcon,
+      this.obsecureText})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class InputField extends StatelessWidget {
             children: [
               Expanded(
                 child: TextFormField(
-                  maxLines: maxLine,
+                  obscureText: obsecureText ?? false,
                   onTap: onTap,
                   readOnly: widget == null ? false : true,
                   controller: controller,

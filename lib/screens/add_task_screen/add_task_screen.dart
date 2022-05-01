@@ -132,7 +132,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       descController.clear();
                       Navigator.of(context).pop();
                       sendNotification(
-                          'Hi, kamu berhasil nambahin tugas ${title}',
+                          'Hi, kamu udah berhasil nambahin tugas ${title}',
                           'Kamu akan diingetin perharinya ya😁');
                       sendNotificationPeriodically(
                           'Hallo, kamu udah beresin tugas ${title} belum?',

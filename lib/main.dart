@@ -13,6 +13,8 @@ Future<void> _handleBGNotification(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -66,7 +68,6 @@ class _MyAppState extends State<MyApp> {
       }
     });
 
-
     super.initState();
   }
 
@@ -75,6 +76,7 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider(
       create: (context) => GoogleSignInProvider(),
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         routes: {'/fcm-page': (_) => NotifFirebaseScreen()},
         title: 'Task Ku Mobile App',

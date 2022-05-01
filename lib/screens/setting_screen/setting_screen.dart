@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
@@ -7,6 +8,7 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -28,6 +30,7 @@ class SettingScreen extends StatelessWidget {
                 child: Lottie.network(
                     'https://assets7.lottiefiles.com/packages/lf20_cmaqoazd.json'),
               ),
+              
             ],
           ),
         ),

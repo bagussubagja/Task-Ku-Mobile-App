@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   DateTime _selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('Howdy,',
                           style: regularBlackStyle.copyWith(fontSize: 18)),
                       Text(
-                        user?.displayName ?? 'Guest',
+                        user?.displayName ?? 'Workaholic',
                         style: titleBlackStyle.copyWith(fontSize: 22),
                       )
                     ],
@@ -44,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   CircleAvatar(
                     radius: 30,
                     backgroundImage: NetworkImage(user?.photoURL ??
-                        'https://img3.pngdownload.id/dy/1b9ce737ab4309d77f8ae34c5c4871b4/L0KzQYm3VsI3N6Z8i5H0aYP2gLBuTfF3aaVmip9Ac3X1PbT2jgB2fJZ3Rdtsb372PcT2hwR4aaNqRdZudnXvf8Hskr02amQ3T9VsOXPmQYbtV745P2M8SqkDMEG4Q4G3U8U1OGI9S6g3cH7q/kisspng-avatar-user-computer-icons-software-developer-5b327cc9cc15f7.872727801530035401836.png'),
+                        'https://img1.pngdownload.id/20180626/ehy/kisspng-avatar-user-computer-icons-software-developer-5b327cc951ae22.8377289615300354013346.jpg'),
                   )
                 ],
               ),
@@ -132,7 +134,6 @@ Stream<List<TaskModel>> readTasks() {
 }
 
 Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
-
   return Container(
     margin: EdgeInsets.only(top: 15),
     padding: EdgeInsets.fromLTRB(10, 12, 10, 12),
@@ -207,15 +208,6 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
         ),
         Column(
           children: [
-            taskModel.isDone == false
-                ? Icon(
-                    Icons.clear,
-                    color: Colors.white,
-                  )
-                : Icon(
-                    Icons.check,
-                    color: Colors.white,
-                  ),
             IconButton(
                 onPressed: () {
                   Navigator.of(context)
@@ -231,6 +223,15 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   Icons.edit,
                   color: Colors.white,
                 )),
+            taskModel.isDone == false
+                ? Icon(
+                    Icons.clear,
+                    color: Colors.white,
+                  )
+                : Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
             IconButton(
               onPressed: () async {
                 showDialog(
@@ -246,6 +247,9 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                           ),
                           TextButton(
                             onPressed: () async {
+                              FlutterLocalNotificationsPlugin
+                                  flutterLocalNotificationsPlugin =
+                                  FlutterLocalNotificationsPlugin();
                               final user = FirebaseAuth.instance.currentUser;
                               var collection = FirebaseFirestore.instance
                                   .collection('todo-list ${user?.uid}');
@@ -253,6 +257,7 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                               var doc = snapshots.docs;
                               collection.doc(snapshots.docs[index].id).delete();
                               Navigator.pop(context);
+                              await flutterLocalNotificationsPlugin.cancelAll();
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content: Text('Data telah dihapus!')));
