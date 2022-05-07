@@ -32,7 +32,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                 style: titleBlackStyle.copyWith(fontSize: 22),
               ),
               Text(
-                'Tempat dimana kamu bisa produktif!',
+                'A place where you can be productive!',
                 style:
                     regularBlackStyle.copyWith(color: greyColor, fontSize: 14),
               ),
@@ -203,10 +203,6 @@ Widget buildTopArticleModel(
             ),
           ),
         ),
-        // Image.network(
-        //   urlImage,
-        //   fit: BoxFit.cover,
-        // ),
         Container(
           height: 180,
           decoration: const BoxDecoration(

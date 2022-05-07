@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:task_ku_mobile_app/main.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/forgotpw_screen.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/register_screen.dart';
@@ -107,24 +108,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: const Text('Register Now!')),
                       ],
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 5),
-                          height: 1,
-                          width: 120,
-                          color: greyColor,
-                        ),
-                        const Text('or'),
-                        Container(
-                          margin: const EdgeInsets.only(left: 5),
-                          height: 1,
-                          width: 120,
-                          color: greyColor,
-                        ),
-                      ],
+                    const Divider(),
+                    Text(
+                      'or sign in with',
+                      style: regularBlackStyle.copyWith(
+                          color: greyColor, fontSize: 15),
                     ),
                     const SizedBox(
                       height: 15,
@@ -172,6 +160,15 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future signIn() async {
     try {
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
@@ -180,5 +177,6 @@ class _SignInScreenState extends State<SignInScreen> {
       return ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message.toString())));
     }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
