@@ -128,6 +128,7 @@ Stream<List<TaskModel>> readTasks() {
   final user = FirebaseAuth.instance.currentUser;
   return FirebaseFirestore.instance
       .collection('todo-list ${user?.uid}')
+      .orderBy(('taskDate'), descending: false)
       .snapshots()
       .map((snapshot) {
     return snapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
