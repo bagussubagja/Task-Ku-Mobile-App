@@ -20,7 +20,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _endTime = DateFormat("hh:mm a")
-      .format(DateTime.now().add(const Duration(hours: 2)))
+      .format(DateTime.now().add(const Duration(hours: 3)))
       .toString();
   bool isDone = false;
   final TextEditingController titleController = TextEditingController();
@@ -131,7 +131,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           'We keep reminds you every day until its done!😁');
                       sendNotificationPeriodically(
                           'Hello, did your already finish your ${title} task?',
-                          'Dont worry, We make sure you never forget what is yours 😊');
+                          'Dont worry, we just remind you there is a task to do! 😊');
 
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Task Successfully added!')));

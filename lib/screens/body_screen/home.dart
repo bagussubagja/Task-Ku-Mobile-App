@@ -105,9 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         shrinkWrap: true,
                       );
                     } else if (!snapshot.hasData) {
-                      return const Text('No Data');
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     } else {
-                      return const CircularProgressIndicator();
+                      return const Text('No Task Available!');
                     }
                   } catch (e) {
                     return const SizedBox();

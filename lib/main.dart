@@ -5,12 +5,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
-import 'package:task_ku_mobile_app/screens/intro_screen/intro_screen_one.dart';
 import 'package:task_ku_mobile_app/shared/page_state.dart';
 
-int? initScreen = 0;
 
 Future<void> _handleBGNotification(RemoteMessage message) async {}
 
@@ -18,9 +16,6 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  initScreen = await preferences.getInt('initScreen');
-  await preferences.setInt('initScreen', 1);
   await Firebase.initializeApp();
   await requestPermission();
   FirebaseMessaging.onBackgroundMessage(_handleBGNotification);
@@ -82,13 +77,11 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         routes: {
-          'onboard': (context) => const ScreenOne(),
           'pagestate': (context) => const PageState(),
         },
         title: 'Task Ku Mobile App',
         theme: ThemeData(fontFamily: 'Poppins'),
-        initialRoute:
-            initScreen == 0 || initScreen == null ? 'onboard' : 'pagestate',
+        initialRoute: 'pagestate',
       ),
     );
   }
