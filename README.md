@@ -1,16 +1,9 @@
-# task_ku_mobile_app
+# Task-Ku Mobile App
 
-A new Flutter project.
+Task-Ku Mobile App is a todo mobile-based aplication. Using Firestore Firebase as database and Provider as State Management.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshot
+![Screenshot_1651925905](https://user-images.githubusercontent.com/74639319/167257435-435f2a50-0959-4695-ae77-9abc20d5b036.png)
+![Screenshot_1651926074](https://user-images.githubusercontent.com/74639319/167257446-b1f893e3-4397-4101-927a-37921c140f38.png)
+![Screenshot_1651927457](https://user-images.githubusercontent.com/74639319/167257451-399ad748-1588-4704-9614-2ed78fa68383.png)
+![Screenshot_1651929842](https://user-images.githubusercontent.com/74639319/167257454-d95a1bf8-9427-47f1-8242-73c80d79597e.png)
