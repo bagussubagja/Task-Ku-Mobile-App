@@ -1,16 +1,11 @@
-# task_ku_mobile_app
+# Task-Ku Mobile App
 
-A new Flutter project.
+![5](https://user-images.githubusercontent.com/74639319/228580754-7d74dd6d-3579-467b-8da9-9770432442d9.jpg)
 
-## Getting Started
+Task-Ku Mobile App is a Todo List mobile based application. This mobile application can facilitate your daily work with the available features. Say goodbye to disorganized work, and welcome to fun work!
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+__Features :__
+* You can save, edit, update, and delete whatever work you have. With time adjustments and reminders in a notification.
+* There are articles that can give you advantages and benefits to increase your productivity level.
+<br/>
+Created with ❤️ - Bagus Subagja
