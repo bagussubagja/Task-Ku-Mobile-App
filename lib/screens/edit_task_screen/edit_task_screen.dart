@@ -26,8 +26,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       FlutterLocalNotificationsPlugin();
   DateTime _selectedDate = DateTime.now();
 
-  String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
-  String _endTime = "10:00 AM";
+  String _startTime = DateFormat("HH:mm").format(DateTime.now()).toString();
+  String _endTime = "";
 
   bool isDone = false;
 

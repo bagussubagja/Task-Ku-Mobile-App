@@ -18,8 +18,8 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime _selectedDate = DateTime.now();
-  String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
-  String _endTime = DateFormat("hh:mm a")
+  String _startTime = DateFormat("HH:mm").format(DateTime.now()).toString();
+  String _endTime = DateFormat("HH:mm")
       .format(DateTime.now().add(const Duration(hours: 3)))
       .toString();
   bool isDone = false;

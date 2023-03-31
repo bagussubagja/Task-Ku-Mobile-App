@@ -89,27 +89,69 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 15,
               ),
+              // StreamBuilder<List<TaskModel>>(
+              //   stream: readTasks(),
+              //   builder: (context, snapshot) {
+              //     try {
+              //       if (snapshot.hasError) {
+              //         return Text('Something error ${snapshot.error}!');
+              //       } else if (snapshot.hasData && snapshot.data != []) {
+              //         print('ga null');
+              //         final tasks = snapshot.data!;
+              //         return ListView.builder(
+              //           itemCount: tasks.length,
+              //           primary: false,
+              //           itemBuilder: (context, index) =>
+              //               buildTask(tasks[index], index, context),
+              //           scrollDirection: Axis.vertical,
+              //           shrinkWrap: true,
+              //         );
+              //       } else if (snapshot.connectionState ==
+              //           ConnectionState.waiting) {
+              //         return const Center(
+              //           child: CircularProgressIndicator(),
+              //         );
+              //       } else if (snapshot.data == [] ||
+              //           snapshot.connectionState == ConnectionState.active) {
+              //         print('null nich');
+              //         return Align(
+              //           alignment: Alignment.bottomCenter,
+              //           child: Text('No Task Available!'),
+              //         );
+              //       } else {
+              //         return const SizedBox.shrink();
+              //       }
+              //     } catch (e) {
+              //       return const SizedBox();
+              //     }
+              //   },
+              // )
               StreamBuilder<List<TaskModel>>(
                 stream: readTasks(),
                 builder: (context, snapshot) {
                   try {
                     if (snapshot.hasError) {
                       return Text('Something error ${snapshot.error}!');
-                    } else if (snapshot.hasData) {
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                       final tasks = snapshot.data!;
                       return ListView.builder(
                         itemCount: tasks.length,
+                        primary: false,
                         itemBuilder: (context, index) =>
                             buildTask(tasks[index], index, context),
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                       );
-                    } else if (!snapshot.hasData) {
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      return const Text('No Task Available!');
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text('No Task Available!'),
+                      );
                     }
                   } catch (e) {
                     return const SizedBox();
