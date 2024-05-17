@@ -23,12 +23,17 @@ void sendNotification(String? title, String? body) async {
       importance: Importance.max);
 
   flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      NotificationDetails(
-          android: AndroidNotificationDetails(channel.id, channel.name,
-              channelDescription: channel.description)));
+    0,
+    title,
+    body,
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        channel.id,
+        channel.name,
+        channelDescription: channel.description,
+      ),
+    ),
+  );
 }
 
 void sendNotificationPeriodically(String? title, String? body) async {
@@ -54,11 +59,16 @@ void sendNotificationPeriodically(String? title, String? body) async {
       importance: Importance.max);
 
   flutterLocalNotificationsPlugin.periodicallyShow(
-      1,
-      title,
-      body,
-      RepeatInterval.daily,
-      NotificationDetails(
-          android: AndroidNotificationDetails(channel.id, channel.name,
-              channelDescription: channel.description)));
+    1,
+    title,
+    body,
+    RepeatInterval.daily,
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        channel.id,
+        channel.name,
+        channelDescription: channel.description,
+      ),
+    ),
+  );
 }

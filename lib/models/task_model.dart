@@ -6,6 +6,7 @@ class TaskModel {
   final String startTask;
   final String endTask;
   final bool isDone;
+  final int colorBox;
 
   TaskModel({
     this.id = '',
@@ -15,6 +16,7 @@ class TaskModel {
     required this.startTask,
     required this.endTask,
     required this.isDone,
+    required this.colorBox,
   });
 
   Map<String, dynamic> toJson() => {
@@ -24,7 +26,8 @@ class TaskModel {
         'taskDate': taskDate,
         'startTask': startTask,
         'endTask': endTask,
-        'isDone': isDone
+        'isDone': isDone,
+        'colorBox': colorBox,
       };
 
   static TaskModel fromJson(Map<String, dynamic> json) {
@@ -35,6 +38,7 @@ class TaskModel {
       startTask: json['startTask'],
       endTask: json['endTask'],
       isDone: json['isDone'],
+      colorBox: json['colorBox']
     );
   }
 }

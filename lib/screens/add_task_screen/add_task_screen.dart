@@ -114,6 +114,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       final selectedDate = _selectedDate;
                       final startTime = _startTime;
                       final endTime = _endTime;
+                      const colorBox = 0xFF111111;
 
                       createTodo(
                         title: title,
@@ -122,6 +123,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         startTime: startTime,
                         endTime: endTime,
                         isDone: false,
+                        colorBox: colorBox
                       );
                       titleController.clear();
                       descController.clear();
@@ -154,6 +156,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       required DateTime taskDate,
       required String startTime,
       required String endTime,
+      required int colorBox,
       required bool isDone}) async {
     final user = FirebaseAuth.instance.currentUser;
     final docTodo =
@@ -167,6 +170,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       startTask: startTime,
       endTask: endTime,
       isDone: false,
+      colorBox: colorBox
     );
 
     final json = task.toJson();

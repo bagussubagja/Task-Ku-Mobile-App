@@ -5,10 +5,11 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:intl/intl.dart';
+import 'package:task_ku_mobile_app/constants/constants.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/screens/edit_task_screen/edit_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
+import 'package:task_ku_mobile_app/utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,154 +23,132 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _selectedDate = DateTime.now();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Howdy,',
-                          style: regularBlackStyle.copyWith(fontSize: 18)),
-                      Text(
-                        user?.displayName ?? 'Workaholic!',
-                        style: titleBlackStyle.copyWith(fontSize: 22),
-                      )
-                    ],
-                  ),
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(user?.photoURL ??
-                        'https://img1.pngdownload.id/20180626/ehy/kisspng-avatar-user-computer-icons-software-developer-5b327cc951ae22.8377289615300354013346.jpg'),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                child: DatePicker(
-                  DateTime.now(),
-                  height: 100,
-                  width: 80,
-                  initialSelectedDate: DateTime.now(),
-                  selectionColor: bluePrimaryColor,
-                  selectedTextColor: Colors.white,
-                  dateTextStyle: TextStyle(fontSize: 18, color: greyColor),
-                  monthTextStyle: TextStyle(fontSize: 12, color: greyColor),
-                  dayTextStyle: TextStyle(fontSize: 12, color: greyColor),
-                  onDateChange: (date) {
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _headerSection(user!),
+            const SizedBox(
+              height: 15,
+            ),
+            SizedBox(
+              child: DatePicker(
+                DateTime.now(),
+                height: 100,
+                width: 80,
+                initialSelectedDate: DateTime.now(),
+                selectionColor: bluePrimaryColor,
+                selectedTextColor: Colors.white,
+                dateTextStyle: TextStyle(fontSize: 18, color: greyColor),
+                monthTextStyle: TextStyle(fontSize: 12, color: greyColor),
+                dayTextStyle: TextStyle(fontSize: 12, color: greyColor),
+                onDateChange: (date) {
+                  setState(() {
                     _selectedDate = date;
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Today',
-                    style: regularStyle.copyWith(color: greyColor),
-                  ),
-                  Text(
-                    DateFormat.yMMMMd().format(DateTime.now()),
-                    style: regularBlackStyle,
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              // StreamBuilder<List<TaskModel>>(
-              //   stream: readTasks(),
-              //   builder: (context, snapshot) {
-              //     try {
-              //       if (snapshot.hasError) {
-              //         return Text('Something error ${snapshot.error}!');
-              //       } else if (snapshot.hasData && snapshot.data != []) {
-              //         print('ga null');
-              //         final tasks = snapshot.data!;
-              //         return ListView.builder(
-              //           itemCount: tasks.length,
-              //           primary: false,
-              //           itemBuilder: (context, index) =>
-              //               buildTask(tasks[index], index, context),
-              //           scrollDirection: Axis.vertical,
-              //           shrinkWrap: true,
-              //         );
-              //       } else if (snapshot.connectionState ==
-              //           ConnectionState.waiting) {
-              //         return const Center(
-              //           child: CircularProgressIndicator(),
-              //         );
-              //       } else if (snapshot.data == [] ||
-              //           snapshot.connectionState == ConnectionState.active) {
-              //         print('null nich');
-              //         return Align(
-              //           alignment: Alignment.bottomCenter,
-              //           child: Text('No Task Available!'),
-              //         );
-              //       } else {
-              //         return const SizedBox.shrink();
-              //       }
-              //     } catch (e) {
-              //       return const SizedBox();
-              //     }
-              //   },
-              // )
-              StreamBuilder<List<TaskModel>>(
-                stream: readTasks(),
-                builder: (context, snapshot) {
-                  try {
-                    if (snapshot.hasError) {
-                      return Text('Something error ${snapshot.error}!');
-                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      final tasks = snapshot.data!;
-                      return ListView.builder(
-                        itemCount: tasks.length,
-                        primary: false,
-                        itemBuilder: (context, index) =>
-                            buildTask(tasks[index], index, context),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text('No Task Available!'),
-                      );
-                    }
-                  } catch (e) {
-                    return const SizedBox();
-                  }
+                  });
                 },
-              )
-            ],
-          ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Today',
+                  style: regularStyle.copyWith(color: greyColor),
+                ),
+                Text(
+                  Utils.formattedDateDisplayed(_selectedDate),
+                  style: regularBlackStyle,
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            StreamBuilder<List<TaskModel>>(
+              stream: readTasks(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Expanded(
+                    child: Center(
+                      child: Text('Error Occured: ${snapshot.error}'),
+                    ),
+                  );
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  final tasks = snapshot.data!;
+                  return Expanded(
+                      child: ListView.builder(
+                    itemCount: tasks.length,
+                    primary: true,
+                    itemBuilder: (context, index) =>
+                        buildTask(tasks[index], index, context),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                  ));
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else {
+                  return const Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text('No Task Available!'),
+                    ),
+                  );
+                }
+              },
+            )
+          ],
         ),
       ),
     );
   }
 }
 
+Widget _headerSection(User user) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(Constants.headerGreeting,
+              style: regularBlackStyle.copyWith(fontSize: 18)),
+          Text(
+            user.displayName!.isNotEmpty ? user.displayName! : user.email!,
+            style: titleBlackStyle.copyWith(fontSize: 22),
+          )
+        ],
+      ),
+      CircleAvatar(
+        radius: 30,
+        backgroundImage: NetworkImage(
+          user.photoURL ?? Constants.randomAvatar,
+        ),
+      )
+    ],
+  );
+}
+
 Stream<List<TaskModel>> readTasks() {
   final user = FirebaseAuth.instance.currentUser;
   return FirebaseFirestore.instance
-      .collection('todo-list ${user?.uid}')
+      .collection('${Constants.collectionName} ${user?.uid}')
       .orderBy(('taskDate'), descending: false)
       .snapshots()
       .map((snapshot) {
@@ -179,10 +158,12 @@ Stream<List<TaskModel>> readTasks() {
 
 Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
   return Container(
+    width: MediaQuery.of(context).size.width,
     margin: const EdgeInsets.only(top: 15),
     padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
     decoration: BoxDecoration(
-        color: bluePrimaryColor, borderRadius: BorderRadius.circular(10)),
+        color: Color(taskModel.colorBox),
+        borderRadius: BorderRadius.circular(10)),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -195,9 +176,13 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
             ),
             Text(
               taskModel.title.length > 28
-                  ? taskModel.title.substring(0, 28) + '...'
+                  ? '${taskModel.title.substring(0, 28)}...'
                   : taskModel.title,
-              style: regularStyle,
+              style: !taskModel.isDone
+                  ? regularStyle
+                  : regularStyle.copyWith(
+                      decoration: TextDecoration.lineThrough,
+                    ),
             ),
             const SizedBox(
               height: 10,
@@ -209,9 +194,13 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
             SizedBox(
               child: Text(
                 taskModel.desc.length > 30
-                    ? taskModel.desc.substring(0, 30) + '...'
+                    ? '${taskModel.desc.substring(0, 30)}...'
                     : taskModel.desc,
-                style: regularStyle.copyWith(fontSize: 15),
+                style: !taskModel.isDone
+                    ? regularStyle
+                    : regularStyle.copyWith(
+                        decoration: TextDecoration.lineThrough,
+                      ),
               ),
             ),
             const SizedBox(
@@ -237,11 +226,11 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '\t\t\t\t\t\t\t\t\t\t\t\t\t Start Time : ',
+                      'Start Time : ',
                       style: titleStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      '\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + taskModel.startTask,
+                      '${taskModel.startTask}',
                       style: regularStyle,
                     ),
                   ],
@@ -267,15 +256,6 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                   Icons.edit,
                   color: Colors.white,
                 )),
-            taskModel.isDone == false
-                ? const Icon(
-                    Icons.clear,
-                    color: Colors.white,
-                  )
-                : const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                  ),
             IconButton(
               onPressed: () async {
                 showDialog(

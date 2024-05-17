@@ -199,6 +199,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     var snapshots = await collection.get();
     var doc = snapshots.docs;
     final editedTask = TaskModel(
+        colorBox: widget.taskModels.colorBox,
         id: snapshots.docs[widget.index].id,
         title: title,
         desc: desc,
