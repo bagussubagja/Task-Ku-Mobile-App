@@ -75,19 +75,21 @@ class _SignInScreenState extends State<SignInScreen> {
                           },
                           child: const Text(
                             'Recovery Password',
-                            style: TextStyle(fontSize: 12),
+                            style: TextStyle(fontSize: 12, color: Colors.blue),
                           )),
                     ),
                     SizedBox(
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue),
                           onPressed: () async {
                             signIn();
                           },
                           child: Text(
                             'Sign In',
-                            style: regularStyle,
+                            style: regularWhiteStyle,
                           )),
                     ),
                     Row(
@@ -99,6 +101,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               color: greyColor, fontSize: 14),
                         ),
                         TextButton(
+                            style: TextButton.styleFrom(
+                                foregroundColor: Colors.blue),
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {

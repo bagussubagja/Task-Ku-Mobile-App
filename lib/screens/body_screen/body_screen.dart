@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
+import 'package:task_ku_mobile_app/provider/theme_provider.dart';
 import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/screens/body_screen/home.dart';
 import 'package:task_ku_mobile_app/screens/body_screen/articles.dart';
@@ -39,38 +39,34 @@ class _BodyScreenState extends State<BodyScreen> {
       ),
       drawer: NavBar(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return const AddTaskScreen();
           }));
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
           actions: [
-            PopupMenuButton(
-                itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Row(
-                          children: [
-                            const Icon(Icons.exit_to_app),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                final provider =
-                                    Provider.of<GoogleSignInProvider>(context,
-                                        listen: false);
-                                provider.logout();
-                              },
-                              style:
-                                  TextButton.styleFrom(primary: Colors.black),
-                              child: const Text('Sign Out'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ])
+            Consumer<ThemeProvider>(
+              builder: (context, value, child) {
+                return IconButton(
+                    onPressed: () {
+                      value.toggleTheme();
+                    },
+                    icon: value.themeMode == ThemeMode.light
+                        ? const Icon(Icons.dark_mode)
+                        : const Icon(
+                            Icons.light_mode,
+                            color: Colors.white,
+                          ));
+              },
+            )
           ],
           elevation: 0,
           backgroundColor: Colors.transparent,

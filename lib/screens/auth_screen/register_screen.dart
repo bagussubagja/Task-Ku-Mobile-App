@@ -70,6 +70,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                          ),
                           onPressed: () {
                             signUp();
                           },
@@ -87,6 +90,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               color: greyColor, fontSize: 14),
                         ),
                         TextButton(
+                            style: TextButton.styleFrom(
+                                foregroundColor: Colors.blue),
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -164,6 +169,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } on FirebaseAuthException catch (e) {
       return ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message.toString())));
+    } finally {
+      Navigator.pop(context);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }

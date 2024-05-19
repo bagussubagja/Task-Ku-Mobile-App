@@ -5,10 +5,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
+import 'package:task_ku_mobile_app/provider/theme_provider.dart';
 import 'package:task_ku_mobile_app/shared/page_state.dart';
-
+import 'package:task_ku_mobile_app/utils/shared_preferences.dart';
 
 Future<void> _handleBGNotification(RemoteMessage message) async {}
 
@@ -20,7 +22,11 @@ Future main() async {
   await requestPermission();
   FirebaseMessaging.onBackgroundMessage(_handleBGNotification);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  runApp(const MyApp());
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadThemePreference();
+  runApp(MyApp(
+    themeProvider: themeProvider,
+  ));
 }
 
 Future<void> requestPermission() async {
@@ -51,13 +57,24 @@ Future<void> requestPermission() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key, required this.themeProvider}) : super(key: key);
+
+  ThemeProvider? themeProvider;
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  final lightTheme = ThemeData(
+    brightness: Brightness.light,
+    fontFamily: 'Poppins'
+  );
+
+  final darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    fontFamily: 'Poppins'
+  );
   @override
   void initState() {
     FirebaseMessaging.instance.getInitialMessage().then((message) {
@@ -71,17 +88,30 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => GoogleSignInProvider(),
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        routes: {
-          'pagestate': (context) => const PageState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => GoogleSignInProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => widget.themeProvider,
+        )
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, value, child) {
+          return MaterialApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            routes: {
+              'pagestate': (context) => const PageState(),
+            },
+            title: 'Task Ku Mobile App',
+            theme: widget.themeProvider!.themeMode == ThemeMode.light
+                ? lightTheme
+                : darkTheme,
+            initialRoute: 'pagestate',
+          );
         },
-        title: 'Task Ku Mobile App',
-        theme: ThemeData(fontFamily: 'Poppins'),
-        initialRoute: 'pagestate',
       ),
     );
   }

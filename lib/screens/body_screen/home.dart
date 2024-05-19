@@ -9,6 +9,7 @@ import 'package:task_ku_mobile_app/constants/constants.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/screens/edit_task_screen/edit_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
+import 'package:task_ku_mobile_app/utils/shared_preferences.dart';
 import 'package:task_ku_mobile_app/utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,9 +23,28 @@ class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   DateTime _selectedDate = DateTime.now();
 
+  String displayName = '';
+
   @override
   void initState() {
     super.initState();
+    SharedPrefsHelper.getUserDisplayName().then((value) {
+      setState(() {
+        displayName = value;
+      });
+    });
+  }
+
+  Stream<List<TaskModel>> readTasks() {
+    final user = FirebaseAuth.instance.currentUser;
+    return FirebaseFirestore.instance
+        .collection('${Constants.collectionName} ${user?.uid}')
+        // .where("taskDate", isEqualTo: _selectedDate)
+        .orderBy(('taskDate'), descending: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
+    });
   }
 
   @override
@@ -35,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _headerSection(user!),
+            _headerSection(user!, displayName),
             const SizedBox(
               height: 15,
             ),
@@ -120,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget _headerSection(User user) {
+Widget _headerSection(User user, String displayName) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -128,10 +148,12 @@ Widget _headerSection(User user) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(Constants.headerGreeting,
-              style: regularBlackStyle.copyWith(fontSize: 18)),
+              style: regularStyle.copyWith(fontSize: 18)),
           Text(
-            user.displayName!.isNotEmpty ? user.displayName! : user.email!,
-            style: titleBlackStyle.copyWith(fontSize: 22),
+            user.displayName != null && user.displayName!.isNotEmpty
+                ? user.displayName!
+                : user.email!,
+            style: titleStyle.copyWith(fontSize: 22),
           )
         ],
       ),
@@ -143,17 +165,6 @@ Widget _headerSection(User user) {
       )
     ],
   );
-}
-
-Stream<List<TaskModel>> readTasks() {
-  final user = FirebaseAuth.instance.currentUser;
-  return FirebaseFirestore.instance
-      .collection('${Constants.collectionName} ${user?.uid}')
-      .orderBy(('taskDate'), descending: false)
-      .snapshots()
-      .map((snapshot) {
-    return snapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
-  });
 }
 
 Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
@@ -230,7 +241,7 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                       style: titleStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      '${taskModel.startTask}',
+                      taskModel.startTask,
                       style: regularStyle,
                     ),
                   ],

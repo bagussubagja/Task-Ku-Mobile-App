@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/about_screen/about_screen.dart';
 
 class NavBar extends StatelessWidget {
@@ -13,7 +15,6 @@ class NavBar extends StatelessWidget {
   NavBar({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-
     return Drawer(
       child: ListView(
         children: [
@@ -23,7 +24,6 @@ class NavBar extends StatelessWidget {
             width: 100,
             child: Image.asset('assets/images/Logo_App_Full_Name.png'),
           ),
-          const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline_rounded),
             title: const Text('About'),
@@ -32,7 +32,14 @@ class NavBar extends StatelessWidget {
               return const AboutScreen();
             })),
           ),
-         const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Log Out'),
+            onTap: () {
+              final provider = Provider.of<GoogleSignInProvider>(context);
+              provider.logout();
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.delete),
             title: const Text('Delete All Task'),
@@ -45,8 +52,8 @@ class NavBar extends StatelessWidget {
                 await doc.reference.delete();
               }
               await flutterLocalNotificationsPlugin.cancelAll();
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Your tasks successfully deleted!')));
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Your tasks successfully deleted!')));
               Navigator.of(context).pop();
             },
           ),
