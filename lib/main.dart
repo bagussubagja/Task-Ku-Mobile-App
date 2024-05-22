@@ -5,12 +5,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/provider/theme_provider.dart';
 import 'package:task_ku_mobile_app/shared/page_state.dart';
-import 'package:task_ku_mobile_app/utils/shared_preferences.dart';
 
 Future<void> _handleBGNotification(RemoteMessage message) async {}
 

@@ -7,6 +7,7 @@ class TaskModel {
   final String endTask;
   final bool isDone;
   final int colorBox;
+  final String levelPriority;
 
   TaskModel({
     this.id = '',
@@ -17,6 +18,7 @@ class TaskModel {
     required this.endTask,
     required this.isDone,
     required this.colorBox,
+    required this.levelPriority,
   });
 
   Map<String, dynamic> toJson() => {
@@ -28,17 +30,18 @@ class TaskModel {
         'endTask': endTask,
         'isDone': isDone,
         'colorBox': colorBox,
+        'levelPriority': levelPriority,
       };
 
   static TaskModel fromJson(Map<String, dynamic> json) {
     return TaskModel(
-      title: json['title'],
-      desc: json['desc'],
-      taskDate: json['taskDate'].toDate(),
-      startTask: json['startTask'],
-      endTask: json['endTask'],
-      isDone: json['isDone'],
-      colorBox: json['colorBox']
-    );
+        title: json['title'],
+        desc: json['desc'],
+        taskDate: json['taskDate'].toDate(),
+        startTask: json['startTask'],
+        endTask: json['endTask'],
+        isDone: json['isDone'],
+        colorBox: json['colorBox'],
+        levelPriority: json['levelPriority']);
   }
 }

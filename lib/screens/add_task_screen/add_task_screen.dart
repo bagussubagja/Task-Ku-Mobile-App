@@ -32,6 +32,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   ];
 
   Color? selectedColorLevelPriority;
+  String? selectedColorLevelText;
   int currentColorIndex = 0;
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat("HH:mm").format(DateTime.now()).toString();
@@ -44,15 +45,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Text(
-            'Add Task',
-            style: titleBlackStyle.copyWith(fontSize: 22),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black),
+        title: Text(
+          'Add Task',
+          style: titleStyle,
+        ),
+        elevation: 0,
+      ),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
@@ -122,7 +123,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             ),
             Text(
               'Select Priority Level',
-              style: regularStyle.copyWith(color: Colors.black),
+              style: regularStyle,
             ),
             const SizedBox(
               height: 12,
@@ -161,6 +162,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   onTap: () {
                     setState(() {
                       selectedColorLevelPriority = color;
+                      selectedColorLevelText = levelPriorityText[index];
                       currentColorIndex = index;
                     });
                     Utils.showSnackbar(context,
@@ -209,7 +211,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               startTime: startTime,
                               endTime: endTime,
                               isDone: false,
-                              colorBox: colorBox!.value);
+                              colorBox: colorBox!.value,
+                              levelPriority: selectedColorLevelText!);
                           titleController.clear();
                           descController.clear();
                           Navigator.of(context).pop();
@@ -227,7 +230,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       : null,
                   child: Text(
                     'Add Task',
-                    style: regularStyle,
+                    style: regularWhiteStyle,
                   )),
             )
           ],
@@ -243,20 +246,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       required String startTime,
       required String endTime,
       required int colorBox,
-      required bool isDone}) async {
+      required bool isDone,
+      required String levelPriority}) async {
     final user = FirebaseAuth.instance.currentUser;
     final docTodo =
         FirebaseFirestore.instance.collection('todo-list ${user?.uid}').doc();
 
     final task = TaskModel(
-        id: docTodo.id,
-        title: title,
-        desc: desc,
-        taskDate: taskDate,
-        startTask: startTime,
-        endTask: endTime,
-        isDone: false,
-        colorBox: colorBox);
+      id: docTodo.id,
+      title: title,
+      desc: desc,
+      taskDate: taskDate,
+      startTask: startTime,
+      endTask: endTime,
+      isDone: false,
+      colorBox: colorBox,
+      levelPriority: selectedColorLevelText!,
+    );
 
     final json = task.toJson();
 

@@ -52,6 +52,20 @@ class _BodyScreenState extends State<BodyScreen> {
       ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+          leading: Consumer<ThemeProvider>(
+            builder: (context, value, child) {
+              return IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  icon: Icon(
+                    Icons.menu,
+                    color: value.themeMode == ThemeMode.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ));
+            },
+          ),
           actions: [
             Consumer<ThemeProvider>(
               builder: (context, value, child) {

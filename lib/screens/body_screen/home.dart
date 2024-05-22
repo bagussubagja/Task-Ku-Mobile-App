@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:task_ku_mobile_app/constants/constants.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Text(
                   Utils.formattedDateDisplayed(_selectedDate),
-                  style: regularBlackStyle,
+                  style: regularStyle,
                 )
               ],
             ),
@@ -175,143 +176,166 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
     decoration: BoxDecoration(
         color: Color(taskModel.colorBox),
         borderRadius: BorderRadius.circular(10)),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    child: Stack(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Positioned(
+          right: 0,
+          child: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(12)),
+            child: Text(
+              taskModel.levelPriority,
+              style: regularBlackStyle.copyWith(fontSize: 8),
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Title :',
-              style: titleStyle.copyWith(fontSize: 16),
-            ),
-            Text(
-              taskModel.title.length > 28
-                  ? '${taskModel.title.substring(0, 28)}...'
-                  : taskModel.title,
-              style: !taskModel.isDone
-                  ? regularStyle
-                  : regularStyle.copyWith(
-                      decoration: TextDecoration.lineThrough,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Title :',
+                    style: titleWhiteStyle.copyWith(fontSize: 16),
+                  ),
+                  Text(
+                    taskModel.title.length > 28
+                        ? '${taskModel.title.substring(0, 28)}...'
+                        : taskModel.title,
+                    style: !taskModel.isDone
+                        ? regularWhiteStyle
+                        : regularWhiteStyle.copyWith(
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Description : ',
+                    style: titleWhiteStyle.copyWith(fontSize: 16),
+                  ),
+                  SizedBox(
+                    child: Text(
+                      taskModel.desc.length > 30
+                          ? '${taskModel.desc.substring(0, 30)}...'
+                          : taskModel.desc,
+                      style: !taskModel.isDone
+                          ? regularWhiteStyle
+                          : regularWhiteStyle.copyWith(
+                              decoration: TextDecoration.lineThrough,
+                            ),
                     ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Description : ',
-              style: titleStyle.copyWith(fontSize: 16),
-            ),
-            SizedBox(
-              child: Text(
-                taskModel.desc.length > 30
-                    ? '${taskModel.desc.substring(0, 30)}...'
-                    : taskModel.desc,
-                style: !taskModel.isDone
-                    ? regularStyle
-                    : regularStyle.copyWith(
-                        decoration: TextDecoration.lineThrough,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Task Date : ',
+                            style: titleWhiteStyle.copyWith(fontSize: 16),
+                          ),
+                          Text(
+                            taskModel.taskDate.toString().substring(0, 10),
+                            style: regularWhiteStyle,
+                          ),
+                        ],
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Start Time : ',
+                            style: titleWhiteStyle.copyWith(fontSize: 16),
+                          ),
+                          Text(
+                            taskModel.startTask,
+                            style: regularWhiteStyle,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Task Date : ',
-                      style: titleStyle.copyWith(fontSize: 16),
-                    ),
-                    Text(
-                      taskModel.taskDate.toString().substring(0, 10),
-                      style: regularStyle,
-                    ),
-                  ],
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        // return EditTaskScreen(taskModel: taskModel[index]);
+                        return EditTaskScreen(
+                          taskModels: taskModel,
+                          index: index,
+                        );
+                      }));
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                    )),
+                IconButton(
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirm Message'),
+                            content: Text(
+                                'Are your sure to delete ${taskModel.title} task?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  FlutterLocalNotificationsPlugin
+                                      flutterLocalNotificationsPlugin =
+                                      FlutterLocalNotificationsPlugin();
+                                  final user =
+                                      FirebaseAuth.instance.currentUser;
+                                  var collection = FirebaseFirestore.instance
+                                      .collection('todo-list ${user?.uid}');
+                                  var snapshots = await collection.get();
+                                  var doc = snapshots.docs;
+                                  collection
+                                      .doc(snapshots.docs[index].id)
+                                      .delete();
+                                  Navigator.pop(context);
+                                  await flutterLocalNotificationsPlugin
+                                      .cancelAll();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Your task successfully deleted!')));
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Start Time : ',
-                      style: titleStyle.copyWith(fontSize: 16),
-                    ),
-                    Text(
-                      taskModel.startTask,
-                      style: regularStyle,
-                    ),
-                  ],
-                )
               ],
             ),
           ],
-        ),
-        Column(
-          children: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    // return EditTaskScreen(taskModel: taskModel[index]);
-                    return EditTaskScreen(
-                      taskModels: taskModel,
-                      index: index,
-                    );
-                  }));
-                },
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                )),
-            IconButton(
-              onPressed: () async {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirm Message'),
-                        content: Text(
-                            'Are your sure to delete ${taskModel.title} task?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'Cancel'),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              FlutterLocalNotificationsPlugin
-                                  flutterLocalNotificationsPlugin =
-                                  FlutterLocalNotificationsPlugin();
-                              final user = FirebaseAuth.instance.currentUser;
-                              var collection = FirebaseFirestore.instance
-                                  .collection('todo-list ${user?.uid}');
-                              var snapshots = await collection.get();
-                              var doc = snapshots.docs;
-                              collection.doc(snapshots.docs[index].id).delete();
-                              Navigator.pop(context);
-                              await flutterLocalNotificationsPlugin.cancelAll();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Your task successfully deleted!')));
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      );
-                    });
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
+        )
       ],
     ),
   );

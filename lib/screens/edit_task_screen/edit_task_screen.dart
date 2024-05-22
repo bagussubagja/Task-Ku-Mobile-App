@@ -49,13 +49,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Text(
-            'Edit Task',
-            style: titleBlackStyle.copyWith(fontSize: 22),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black),
+        title: Text(
+          'Edit Task',
+          style: titleStyle.copyWith(fontSize: 22),
+        ),
+        elevation: 0,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -199,6 +198,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     var snapshots = await collection.get();
     var doc = snapshots.docs;
     final editedTask = TaskModel(
+        levelPriority: '',
         colorBox: widget.taskModels.colorBox,
         id: snapshots.docs[widget.index].id,
         title: title,

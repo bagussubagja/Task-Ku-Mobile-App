@@ -22,8 +22,6 @@ class _PageStateState extends State<PageState> {
           firebaseAuth.currentUser?.email ??
           '-',
     );
-    print('1: ${firebaseAuth.currentUser?.displayName}');
-    print('2: ${firebaseAuth.currentUser?.email}');
   }
 
   @override
