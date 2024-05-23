@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
+import 'package:task_ku_mobile_app/utils/utils.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
 
 class EditTaskScreen extends StatefulWidget {
@@ -198,7 +199,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     var snapshots = await collection.get();
     var doc = snapshots.docs;
     final editedTask = TaskModel(
-        levelPriority: '',
+        numOfPriority: Utils.numberOfPriority(widget.taskModels.levelPriority),
+        dateTime: Utils.formattedDateDisplayed(taskDate),
+        levelPriority: widget.taskModels.levelPriority,
         colorBox: widget.taskModels.colorBox,
         id: snapshots.docs[widget.index].id,
         title: title,

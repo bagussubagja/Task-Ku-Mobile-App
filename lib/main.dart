@@ -65,14 +65,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final lightTheme = ThemeData(
-    brightness: Brightness.light,
-    fontFamily: 'Poppins'
-  );
+      brightness: Brightness.light,
+      fontFamily: 'Poppins',
+      colorSchemeSeed: Colors.blue);
 
   final darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    fontFamily: 'Poppins'
-  );
+      brightness: Brightness.dark,
+      fontFamily: 'Poppins',
+      colorSchemeSeed: Colors.blue);
   @override
   void initState() {
     FirebaseMessaging.instance.getInitialMessage().then((message) {

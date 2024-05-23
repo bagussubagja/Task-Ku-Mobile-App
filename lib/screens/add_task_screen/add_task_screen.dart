@@ -254,6 +254,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     final task = TaskModel(
       id: docTodo.id,
+      numOfPriority: Utils.numberOfPriority(levelPriority),
       title: title,
       desc: desc,
       taskDate: taskDate,
@@ -262,6 +263,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       isDone: false,
       colorBox: colorBox,
       levelPriority: selectedColorLevelText!,
+      dateTime: Utils.formattedDateDisplayed(taskDate),
     );
 
     final json = task.toJson();

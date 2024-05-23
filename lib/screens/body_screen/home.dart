@@ -40,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final user = FirebaseAuth.instance.currentUser;
     return FirebaseFirestore.instance
         .collection('${Constants.collectionName} ${user?.uid}')
-        // .where("taskDate", isEqualTo: _selectedDate)
-        .orderBy(('taskDate'), descending: false)
+        .where(('dateTime'),
+            isEqualTo: Utils.formattedDateDisplayed(_selectedDate))
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((e) => TaskModel.fromJson(e.data())).toList();
@@ -112,8 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ListView.builder(
                     itemCount: tasks.length,
                     primary: true,
-                    itemBuilder: (context, index) =>
-                        buildTask(tasks[index], index, context),
+                    itemBuilder: (context, index) {
+                      return buildTask(tasks[index], index, context);
+                    },
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                   ));
@@ -125,10 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 } else {
-                  return const Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('No Task Available!'),
+                  return Center(
+                    child: Text(
+                      'Task Not Available',
+                      style: regularStyle,
                     ),
                   );
                 }
@@ -186,7 +187,10 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                 color: Colors.white, borderRadius: BorderRadius.circular(12)),
             child: Text(
               taskModel.levelPriority,
-              style: regularBlackStyle.copyWith(fontSize: 8),
+              style: regularBlackStyle.copyWith(
+                fontSize: 8,
+                color: Color(taskModel.colorBox),
+              ),
             ),
           ),
         ),
@@ -257,7 +261,7 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                             style: titleWhiteStyle.copyWith(fontSize: 16),
                           ),
                           Text(
-                            taskModel.startTask,
+                            "${taskModel.startTask} WIB",
                             style: regularWhiteStyle,
                           ),
                         ],
