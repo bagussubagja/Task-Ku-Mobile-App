@@ -8,11 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/about_screen/about_screen.dart';
 
-class NavBar extends StatelessWidget {
+class NavDrawer extends StatelessWidget {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  NavBar({Key? key}) : super(key: key);
+  NavDrawer({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -36,7 +36,8 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Log Out'),
             onTap: () {
-              final provider = Provider.of<GoogleSignInProvider>(context);
+              final provider =
+                  Provider.of<GoogleSignInProvider>(context, listen: false);
               provider.logout();
             },
           ),

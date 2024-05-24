@@ -8,7 +8,7 @@ import 'package:task_ku_mobile_app/models/task_model.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/utils/utils.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';
-import 'package:task_ku_mobile_app/widgets/notification.dart';
+import 'package:task_ku_mobile_app/utils/notification.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
@@ -135,7 +135,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 final index = entry.key;
                 final color = entry.value;
                 Color borderColor;
-                String levelPriority;
 
                 // Assign border color based on index
                 switch (currentColorIndex) {
@@ -273,16 +272,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime?.format(context) ?? '10:00 AM';
-    if (pickedTime == null) {
-    } else if (isStartTime == true) {
-      setState(() {
-        _startTime = _formatedTime;
-      });
-    } else if (isStartTime == false) {
-      setState(() {
-        _endTime = _formatedTime;
-      });
+    if (mounted) {
+      String formatedTime = pickedTime?.format(context) ?? '10:00 AM';
+      if (pickedTime == null) {
+      } else if (isStartTime == true) {
+        setState(() {
+          _startTime = formatedTime;
+        });
+      } else if (isStartTime == false) {
+        setState(() {
+          _endTime = formatedTime;
+        });
+      }
     }
   }
 
@@ -298,15 +299,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   Future _getDateFromUser() async {
-    DateTime? _pickerDate = await showDatePicker(
+    DateTime? pickerDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2000),
         lastDate: DateTime(2100));
 
-    if (_pickerDate != null) {
+    if (pickerDate != null) {
       setState(() {
-        _selectedDate = _pickerDate;
+        _selectedDate = pickerDate;
       });
     } else {}
   }

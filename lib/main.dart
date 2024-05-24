@@ -1,4 +1,4 @@
-// ignore_for_file: await_only_futures, unused_local_variable
+// ignore_for_file: await_only_futures, unused_local_variable, must_be_immutable
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

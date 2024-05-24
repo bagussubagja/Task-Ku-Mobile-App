@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:task_ku_mobile_app/models/article_model.dart';
 import 'package:task_ku_mobile_app/models/top_articles_model.dart';
-import 'package:task_ku_mobile_app/screens/article_list_screen/article_list_screen.dart';
+import 'package:task_ku_mobile_app/screens/article/article_list_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 

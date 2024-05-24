@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:task_ku_mobile_app/constants/constants.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
@@ -62,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(
               child: DatePicker(
-                DateTime.now(),
+                DateTime(DateTime.now().year, DateTime.now().month, 1),
                 height: 100,
                 width: 80,
                 initialSelectedDate: DateTime.now(),
@@ -126,12 +125,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 } else {
-                  return Center(
+                  return Expanded(
+                      child: Center(
                     child: Text(
                       'Task Not Available',
                       style: regularStyle,
                     ),
-                  );
+                  ));
                 }
               },
             )

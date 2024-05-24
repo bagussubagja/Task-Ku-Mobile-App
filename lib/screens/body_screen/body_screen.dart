@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:task_ku_mobile_app/provider/theme_provider.dart';
 import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/screens/body_screen/home.dart';
-import 'package:task_ku_mobile_app/screens/body_screen/articles.dart';
+import 'package:task_ku_mobile_app/screens/article/articles.dart';
 import 'package:task_ku_mobile_app/widgets/nav_drawer.dart';
 
 class BodyScreen extends StatefulWidget {
@@ -37,7 +37,7 @@ class _BodyScreenState extends State<BodyScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-      drawer: NavBar(),
+      drawer: NavDrawer(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {

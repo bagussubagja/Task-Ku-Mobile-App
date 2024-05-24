@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
-  
   static int numberOfPriority(String priority) {
     switch (priority) {
       case 'High Priority':
@@ -29,5 +28,9 @@ class Utils {
         content: Text(content),
       ),
     );
+  }
+
+  static void hideKeyboard() {
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }
