@@ -6,6 +6,11 @@ class TaskModel {
   final String startTask;
   final String endTask;
   final bool isDone;
+  final int colorBox;
+  final String levelPriority;
+  final String dateTime;
+  final int numOfPriority;
+  final int idNotification;
 
   TaskModel({
     this.id = '',
@@ -15,6 +20,11 @@ class TaskModel {
     required this.startTask,
     required this.endTask,
     required this.isDone,
+    required this.colorBox,
+    required this.levelPriority,
+    required this.numOfPriority,
+    required this.dateTime,
+    required this.idNotification,
   });
 
   Map<String, dynamic> toJson() => {
@@ -24,17 +34,26 @@ class TaskModel {
         'taskDate': taskDate,
         'startTask': startTask,
         'endTask': endTask,
-        'isDone': isDone
+        'isDone': isDone,
+        'colorBox': colorBox,
+        'levelPriority': levelPriority,
+        'numOfPriority': numOfPriority,
+        'dateTime': dateTime,
+        'idNotification': idNotification,
       };
 
   static TaskModel fromJson(Map<String, dynamic> json) {
     return TaskModel(
-      title: json['title'],
-      desc: json['desc'],
-      taskDate: json['taskDate'].toDate(),
-      startTask: json['startTask'],
-      endTask: json['endTask'],
-      isDone: json['isDone'],
-    );
+        title: json['title'],
+        desc: json['desc'],
+        taskDate: json['taskDate'].toDate(),
+        startTask: json['startTask'],
+        endTask: json['endTask'],
+        isDone: json['isDone'],
+        colorBox: json['colorBox'],
+        levelPriority: json['levelPriority'],
+        numOfPriority: json['numOfPriority'],
+        dateTime: json['dateTime'],
+        idNotification: json['idNotification']);
   }
 }

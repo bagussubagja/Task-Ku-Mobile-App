@@ -14,13 +14,12 @@ class ArticleListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-            'Article List Screen',
-            style: titleBlackStyle.copyWith(fontSize: 20),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black),
+        title: Text(
+          'Article List Screen',
+          style: titleStyle.copyWith(fontSize: 20),
+        ),
+        elevation: 0,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -31,7 +30,6 @@ class ArticleListScreen extends StatelessWidget {
               StreamBuilder<List<ArticleModel>>(
                   stream: readArticles(),
                   builder: (context, snapshot) {
-                    
                     try {
                       if (snapshot.hasError) {
                         return Text('Something error ${snapshot.error}');
@@ -86,11 +84,11 @@ class ArticleListScreen extends StatelessWidget {
         ),
         title: Text(
           articleModel.title,
-          style: regularBlackStyle.copyWith(fontSize: 14),
+          style: regularStyle.copyWith(fontSize: 14),
         ),
         subtitle: Text(
           articleModel.desc.length > 30
-              ? articleModel.desc.substring(0, 30) + '...'
+              ? '${articleModel.desc.substring(0, 30)}...'
               : articleModel.desc,
           style: regularStyle.copyWith(color: greyColor, fontSize: 12),
         ),

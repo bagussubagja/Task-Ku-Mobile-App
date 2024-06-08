@@ -17,22 +17,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black),
+        elevation: 0,
+        title: Text(
+          'Forgot Password',
+          style: titleStyle,
+        ),
+      ),
       body: SafeArea(
-          child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
           child: Column(
             children: [
-              Text(
-                'Forgot Password',
-                style: titleStyle.copyWith(color: Colors.black),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               Text(
                 'Welcome to Task-ku Mobile App!\nAn application that can make your task easier.',
                 textAlign: TextAlign.center,
@@ -51,16 +46,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 controller: emailController,
                 hintText: "Enter your email...",
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const Spacer(),
               SizedBox(
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () async {
-                      resetPassword();
-                    },
+                    onPressed: emailController.text.isNotEmpty
+                        ? () async {
+                            resetPassword();
+                          }
+                        : null,
                     child: Text(
                       'Reset Password',
                       style: regularStyle,
@@ -69,7 +64,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ],
           ),
         ),
-      )),
+      ),
     );
   }
 
@@ -78,11 +73,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
     } on FirebaseAuthException catch (e) {
-      return ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message.toString())));
+      if (mounted) {
+        return ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message.toString())));
+      }
     }
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Check your email to reset your password!')));
+    if (mounted) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Check your email to reset your password!')));
+    }
   }
 }

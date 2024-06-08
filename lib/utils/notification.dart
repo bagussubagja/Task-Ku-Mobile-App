@@ -1,9 +1,14 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+void cancelNotification(int id) async {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  await flutterLocalNotificationsPlugin.cancel(id);
+}
+
 void sendNotification(String? title, String? body) async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   IOSInitializationSettings initializationSettingsIOS =
@@ -23,18 +28,26 @@ void sendNotification(String? title, String? body) async {
       importance: Importance.max);
 
   flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      NotificationDetails(
-          android: AndroidNotificationDetails(channel.id, channel.name,
-              channelDescription: channel.description)));
+    0,
+    title,
+    body,
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        channel.id,
+        channel.name,
+        channelDescription: channel.description,
+      ),
+    ),
+  );
 }
 
-void sendNotificationPeriodically(String? title, String? body) async {
+void sendNotificationPeriodically(
+    {String? title,
+    String? body,
+    RepeatInterval interval = RepeatInterval.daily,
+    int? id}) async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   IOSInitializationSettings initializationSettingsIOS =
@@ -54,11 +67,16 @@ void sendNotificationPeriodically(String? title, String? body) async {
       importance: Importance.max);
 
   flutterLocalNotificationsPlugin.periodicallyShow(
-      1,
-      title,
-      body,
-      RepeatInterval.daily,
-      NotificationDetails(
-          android: AndroidNotificationDetails(channel.id, channel.name,
-              channelDescription: channel.description)));
+    id!,
+    title,
+    body,
+    interval,
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        channel.id,
+        channel.name,
+        channelDescription: channel.description,
+      ),
+    ),
+  );
 }

@@ -9,9 +9,8 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black),
+        elevation: 0,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -20,7 +19,7 @@ class AboutScreen extends StatelessWidget {
             children: [
               Text(
                 'About Us',
-                style: titleBlackStyle,
+                style: titleStyle,
               ),
               SizedBox(
                 height: 300,
@@ -34,7 +33,7 @@ class AboutScreen extends StatelessWidget {
               Text(
                 'Task-Ku Mobile App is a mobile-based application that can make it easy for you to organize and remember the tasks you have!',
                 textAlign: TextAlign.center,
-                style: regularBlackStyle,
+                style: regularStyle,
               )
             ],
           ),

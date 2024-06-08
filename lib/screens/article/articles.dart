@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:task_ku_mobile_app/models/article_model.dart';
 import 'package:task_ku_mobile_app/models/top_articles_model.dart';
-import 'package:task_ku_mobile_app/screens/article_list_screen/article_list_screen.dart';
+import 'package:task_ku_mobile_app/screens/article/article_list_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,7 +29,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
             children: [
               Text(
                 'Task-Ku Articles',
-                style: titleBlackStyle.copyWith(fontSize: 22),
+                style: titleStyle.copyWith(fontSize: 22),
               ),
               Text(
                 'A place where you can be productive!',
@@ -78,7 +78,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                     margin: const EdgeInsets.only(left: 10),
                     child: Text(
                       'New Article',
-                      style: titleBlackStyle.copyWith(fontSize: 18),
+                      style: titleStyle.copyWith(fontSize: 18),
                     ),
                   ),
                   TextButton(
@@ -162,11 +162,11 @@ Widget buildArticles(
       ),
       title: Text(
         articleModel.title,
-        style: regularBlackStyle.copyWith(fontSize: 14),
+        style: regularStyle.copyWith(fontSize: 14),
       ),
       subtitle: Text(
         articleModel.desc.length > 30
-            ? articleModel.desc.substring(0, 30) + '...'
+            ? '${articleModel.desc.substring(0, 30)}...'
             : articleModel.desc,
         style: regularStyle.copyWith(color: greyColor, fontSize: 12),
       ),
