@@ -6,7 +6,7 @@ import 'package:task_ku_mobile_app/main.dart';
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/forgotpw_screen.dart';
 import 'package:task_ku_mobile_app/screens/auth_screen/register_screen.dart';
-import 'package:task_ku_mobile_app/shared/page_state.dart';
+import 'package:task_ku_mobile_app/screens/page_state.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/utils/utils.dart';
 import 'package:task_ku_mobile_app/widgets/input_field.dart';

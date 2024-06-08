@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:task_ku_mobile_app/constants/constants.dart';
 import 'package:task_ku_mobile_app/models/task_model.dart';
-import 'package:task_ku_mobile_app/screens/edit_task_screen/edit_task_screen.dart';
+import 'package:task_ku_mobile_app/screens/add_task_screen/add_task_screen.dart';
 import 'package:task_ku_mobile_app/shared/theme.dart';
 import 'package:task_ku_mobile_app/utils/shared_preferences.dart';
 import 'package:task_ku_mobile_app/utils/utils.dart';
@@ -277,10 +277,10 @@ Widget buildTask(TaskModel taskModel, int index, BuildContext context) {
                     onPressed: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        // return EditTaskScreen(taskModel: taskModel[index]);
-                        return EditTaskScreen(
-                          taskModels: taskModel,
+                        return AddTaskScreen(
+                          isEdit: true,
                           index: index,
+                          taskModels: taskModel,
                         );
                       }));
                     },

@@ -33,7 +33,7 @@ class InputField extends StatelessWidget {
                 titleText,
                 style: const TextStyle(fontSize: 14),
               ),
-       const SizedBox(
+        const SizedBox(
           height: 5,
         ),
         SizedBox(

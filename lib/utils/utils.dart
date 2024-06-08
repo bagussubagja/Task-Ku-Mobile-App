@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
+  static int idNotifGenerator(String value) {
+    String generateValue = value.codeUnits.join().substring(0, 10);
+    int id = int.parse(generateValue);
+    return id;
+  }
+
   static int numberOfPriority(String priority) {
     switch (priority) {
       case 'High Priority':

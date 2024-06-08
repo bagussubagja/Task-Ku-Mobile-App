@@ -42,7 +42,9 @@ class _BodyScreenState extends State<BodyScreen> {
         backgroundColor: Colors.blue,
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return const AddTaskScreen();
+            return const AddTaskScreen(
+              isEdit: false,
+            );
           }));
         },
         child: const Icon(

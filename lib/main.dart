@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'package:task_ku_mobile_app/provider/google_sign_in.dart';
 import 'package:task_ku_mobile_app/provider/theme_provider.dart';
-import 'package:task_ku_mobile_app/shared/page_state.dart';
+import 'package:task_ku_mobile_app/screens/page_state.dart';
 
 Future<void> _handleBGNotification(RemoteMessage message) async {}
 
