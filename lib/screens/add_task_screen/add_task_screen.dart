@@ -229,8 +229,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 );
               }).toList(),
             ),
-            if (Utils.numberOfPriority(selectedColorLevelText!) == 3 ||
-                Utils.numberOfPriority(selectedColorLevelText!) == 2) ...[
+            if (Utils.numberOfPriority(selectedColorLevelText ?? '') == 3 ||
+                Utils.numberOfPriority(selectedColorLevelText ?? '') == 2) ...[
               const SizedBox(
                 height: 20,
               ),
